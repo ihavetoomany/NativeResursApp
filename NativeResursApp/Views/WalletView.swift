@@ -13,56 +13,69 @@ struct WalletView: View {
     var body: some View {
         NavigationStack {
             StickyHeaderView(title: "Wallet", subtitle: "Good morning", trailingButton: "person.circle.fill") {
-                VStack(spacing: 16) {
-                    // Quick Info Box
-                    WalletInfoBox()
-                        .padding(.horizontal)
-                        .padding(.top, 24)
-                        .padding(.bottom, 16)
-                    
-                    // Tab selection
-                    HStack(spacing: 0) {
+                // Sticky Pills Section
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12) {
                         Button(action: { selectedTab = 0 }) {
-                            VStack(spacing: 8) {
-                                Text("Invoices")
-                                    .font(.headline)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(selectedTab == 0 ? .cyan : .secondary)
-                                
-                                Rectangle()
-                                    .fill(selectedTab == 0 ? .cyan : .clear)
-                                    .frame(height: 2)
-                                    .animation(.easeInOut(duration: 0.2), value: selectedTab)
-                            }
+                            Text("Invoices")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(selectedTab == 0 ? .primary : .secondary)
+                                .padding(.horizontal, 24)
+                                .padding(.vertical, 12)
+                                .background(selectedTab == 0 ? Color.cyan.opacity(0.2) : Color.clear)
+                                .clipShape(Capsule())
+                                .overlay(
+                                    Capsule()
+                                        .stroke(selectedTab == 0 ? Color.cyan : Color.secondary.opacity(0.3), lineWidth: 1)
+                                )
                         }
-                        .frame(maxWidth: .infinity)
                         
                         Button(action: { selectedTab = 1 }) {
-                            VStack(spacing: 8) {
-                                Text("Purchases")
-                                    .font(.headline)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(selectedTab == 1 ? .cyan : .secondary)
-                                
-                                Rectangle()
-                                    .fill(selectedTab == 1 ? .cyan : .clear)
-                                    .frame(height: 2)
-                                    .animation(.easeInOut(duration: 0.2), value: selectedTab)
+                            Text("Purchases")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(selectedTab == 1 ? .primary : .secondary)
+                                .padding(.horizontal, 24)
+                                .padding(.vertical, 12)
+                                .background(selectedTab == 1 ? Color.cyan.opacity(0.2) : Color.clear)
+                                .clipShape(Capsule())
+                                .overlay(
+                                    Capsule()
+                                        .stroke(selectedTab == 1 ? Color.cyan : Color.secondary.opacity(0.3), lineWidth: 1)
+                                )
+                        }
+                        
+                        Button(action: { selectedTab = 2 }) {
+                            Text("Errands")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(selectedTab == 2 ? .primary : .secondary)
+                                .padding(.horizontal, 24)
+                                .padding(.vertical, 12)
+                                .background(selectedTab == 2 ? Color.cyan.opacity(0.2) : Color.clear)
+                                .clipShape(Capsule())
+                                .overlay(
+                                    Capsule()
+                                        .stroke(selectedTab == 2 ? Color.cyan : Color.secondary.opacity(0.3), lineWidth: 1)
+                                    )
                             }
                         }
-                        .frame(maxWidth: .infinity)
+                        .padding(.horizontal)
                     }
-                    .padding(.horizontal)
-                    .frame(height: 44) // Fixed height for tab buttons
-
-                    // Content based on selected tab
-                    if selectedTab == 0 {
-                        InvoicesList()
-                    } else {
-                        PurchasesList()
+                    .padding(.bottom, 12)
+                } content: {
+                    VStack(spacing: 16) {
+                        // Content based on selected tab
+                        if selectedTab == 0 {
+                            InvoicesList()
+                        } else if selectedTab == 1 {
+                            PurchasesList()
+                        } else {
+                            ErrandsList()
+                        }
                     }
                 }
-            }
             .navigationBarHidden(true)
         }
     }
@@ -71,6 +84,10 @@ struct WalletView: View {
 struct PurchasesList: View {
     var body: some View {
         VStack(spacing: 12) {
+            // Credit Info Box
+            CreditInfoBox()
+                .padding(.vertical, 8)
+            
             PurchaseRow(
                 title: "Coffee Shop",
                 subtitle: "Today, 2:30 PM",
@@ -147,16 +164,98 @@ struct PurchasesList: View {
     }
 }
 
+struct ErrandsList: View {
+    var body: some View {
+        VStack(spacing: 12) {
+            ErrandRow(
+                title: "Renew Insurance",
+                subtitle: "Due in 2 days",
+                icon: "shield.fill",
+                color: .blue
+            )
+            
+            ErrandRow(
+                title: "Update Payment Method",
+                subtitle: "Recommended",
+                icon: "creditcard.fill",
+                color: .orange
+            )
+            
+            ErrandRow(
+                title: "Review Credit Limit",
+                subtitle: "Action available",
+                icon: "chart.bar.fill",
+                color: .purple
+            )
+            
+            ErrandRow(
+                title: "Complete Profile",
+                subtitle: "80% complete",
+                icon: "person.fill",
+                color: .green
+            )
+            
+            ErrandRow(
+                title: "Set Up Auto-Pay",
+                subtitle: "Simplify payments",
+                icon: "repeat.circle.fill",
+                color: .cyan
+            )
+        }
+        .padding(.horizontal)
+    }
+}
+
+struct ErrandRow: View {
+    let title: String
+    let subtitle: String
+    let icon: String
+    let color: Color
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            Image(systemName: icon)
+                .font(.title3)
+                .foregroundColor(color)
+                .frame(width: 36, height: 36)
+                .background(color.opacity(0.2))
+                .clipShape(Circle())
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            
+            Spacer()
+            
+            Image(systemName: "chevron.right")
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+        .padding(16)
+        .background(.ultraThinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+}
+
 struct InvoicesList: View {
     var body: some View {
         VStack(spacing: 12) {
+            // Quick Info Box
+            WalletInfoBox()
+                .padding(.vertical, 8)
+            
             // Overdue invoices at the top
             InvoiceRow(
                 title: "Bauhaus",
                 subtitle: "Overdue by 2 days",
                 amount: "2,456.70 SEK",
                 icon: "hammer.fill",
-                color: .red,
+                color: .orange,
                 isOverdue: true
             )
             
@@ -165,7 +264,7 @@ struct InvoicesList: View {
                 subtitle: "Overdue by 1 day",
                 amount: "894.50 SEK",
                 icon: "bag.fill",
-                color: .red,
+                color: .orange,
                 isOverdue: true
             )
             
@@ -300,7 +399,7 @@ struct InvoiceRow: View {
                     .fontWeight(.medium)
                 Text(subtitle)
                     .font(.caption)
-                    .foregroundColor(isOverdue ? .red : .secondary)
+                    .foregroundColor(isOverdue ? color : .secondary)
             }
             
             Spacer()
@@ -313,6 +412,64 @@ struct InvoiceRow: View {
         .padding(16)
         .background(.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+}
+
+struct CreditInfoBox: View {
+    var body: some View {
+        VStack(spacing: 16) {
+            // Total available credit
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Total Available Credit")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                Text("40,000 SEK")
+                    .font(.system(size: 32, weight: .bold))
+                    .foregroundColor(.primary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            
+            Divider()
+            
+            // Credit accounts
+            VStack(alignment: .leading, spacing: 12) {
+                CreditAccountRow(name: "Resurs Credit Card", available: "25,000 SEK", limit: "50,000 SEK")
+                CreditAccountRow(name: "Resurs Flex Account", available: "15,000 SEK", limit: "30,000 SEK")
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(20)
+        .background(.ultraThinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+    }
+}
+
+struct CreditAccountRow: View {
+    let name: String
+    let available: String
+    let limit: String
+    
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(name)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                Text("\(available) available of \(limit)")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            
+            Spacer()
+            
+            Image(systemName: "chevron.right")
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+        .padding(12)
+        .background(Color.cyan.opacity(0.1))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 }
 
