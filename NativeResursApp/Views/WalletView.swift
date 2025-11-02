@@ -10,9 +10,23 @@ import SwiftUI
 struct WalletView: View {
     @State private var selectedTab = 0
     
+    private var greeting: String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        switch hour {
+        case 5..<11:
+            return "Good morning"
+        case 11..<16:
+            return "Good day"
+        case 16..<23:
+            return "Good evening"
+        default:
+            return "Good night"
+        }
+    }
+    
     var body: some View {
         NavigationStack {
-            StickyHeaderView(title: "Wallet", subtitle: "Good morning", trailingButton: "person.circle.fill") {
+            StickyHeaderView(title: "Wallet", subtitle: greeting, trailingButton: "person.circle.fill") {
                 // Sticky Pills Section
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {

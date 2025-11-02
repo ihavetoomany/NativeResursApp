@@ -112,7 +112,8 @@ struct StickyHeaderView<Content: View, StickyContent: View>: View {
                     AnyView(stickyContent)
                 }
             }
-            .background(Color.black)
+            .background(Color.black.opacity(0.85))
+            .background(.ultraThinMaterial)
             .animation(.easeInOut(duration: 0.2), value: scrollProgress)
         }
     }
