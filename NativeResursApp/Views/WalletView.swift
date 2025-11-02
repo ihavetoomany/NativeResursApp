@@ -82,16 +82,18 @@ struct WalletView: View {
 }
 
 struct PurchasesList: View {
+    @State private var showCreditDetails = false
+    
     var body: some View {
         VStack(spacing: 12) {
             // Credit Info Box
-            CreditInfoBox()
+            CreditInfoBox(showDetails: $showCreditDetails)
                 .padding(.vertical, 8)
             
             PurchaseRow(
                 title: "Coffee Shop",
                 subtitle: "Today, 2:30 PM",
-                amount: "45.00 SEK",
+                amount: "45 SEK",
                 icon: "cup.and.saucer.fill",
                 color: .brown
             )
@@ -99,7 +101,7 @@ struct PurchasesList: View {
             PurchaseRow(
                 title: "Grocery Store",
                 subtitle: "Yesterday, 5:15 PM",
-                amount: "678.90 SEK",
+                amount: "679 SEK",
                 icon: "cart.fill",
                 color: .green
             )
@@ -107,7 +109,7 @@ struct PurchasesList: View {
             PurchaseRow(
                 title: "Gas Station",
                 subtitle: "Yesterday, 8:30 AM",
-                amount: "452.00 SEK",
+                amount: "452 SEK",
                 icon: "fuelpump.fill",
                 color: .orange
             )
@@ -115,7 +117,7 @@ struct PurchasesList: View {
             PurchaseRow(
                 title: "Online Purchase",
                 subtitle: "2 days ago, 7:45 PM",
-                amount: "899.90 SEK",
+                amount: "900 SEK",
                 icon: "bag.fill",
                 color: .purple
             )
@@ -123,7 +125,7 @@ struct PurchasesList: View {
             PurchaseRow(
                 title: "Restaurant",
                 subtitle: "3 days ago, 7:00 PM",
-                amount: "321.50 SEK",
+                amount: "322 SEK",
                 icon: "fork.knife",
                 color: .red
             )
@@ -131,7 +133,7 @@ struct PurchasesList: View {
             PurchaseRow(
                 title: "Pharmacy",
                 subtitle: "4 days ago, 11:20 AM",
-                amount: "234.50 SEK",
+                amount: "235 SEK",
                 icon: "cross.fill",
                 color: .pink
             )
@@ -139,7 +141,7 @@ struct PurchasesList: View {
             PurchaseRow(
                 title: "Bookstore",
                 subtitle: "5 days ago, 3:15 PM",
-                amount: "189.90 SEK",
+                amount: "190 SEK",
                 icon: "book.fill",
                 color: .indigo
             )
@@ -147,7 +149,7 @@ struct PurchasesList: View {
             PurchaseRow(
                 title: "Movie Theater",
                 subtitle: "6 days ago, 8:45 PM",
-                amount: "245.00 SEK",
+                amount: "245 SEK",
                 icon: "tv.fill",
                 color: .cyan
             )
@@ -155,7 +157,7 @@ struct PurchasesList: View {
             PurchaseRow(
                 title: "Clothing Store",
                 subtitle: "1 week ago, 2:30 PM",
-                amount: "1,567.80 SEK",
+                amount: "1 568 SEK",
                 icon: "tshirt.fill",
                 color: .mint
             )
@@ -253,8 +255,8 @@ struct InvoicesList: View {
             InvoiceRow(
                 title: "Bauhaus",
                 subtitle: "Overdue by 2 days",
-                amount: "2,456.70 SEK",
-                icon: "hammer.fill",
+                amount: "2 457 SEK",
+                icon: "doc.text.fill",
                 color: .orange,
                 isOverdue: true
             )
@@ -262,27 +264,27 @@ struct InvoicesList: View {
             InvoiceRow(
                 title: "Gekås",
                 subtitle: "Overdue by 1 day",
-                amount: "894.50 SEK",
-                icon: "bag.fill",
+                amount: "895 SEK",
+                icon: "doc.text.fill",
                 color: .orange,
                 isOverdue: true
             )
             
             // Due within 4 days (yellow)
             InvoiceRow(
-                title: "Netonnet",
-                subtitle: "Due in 3 days",
-                amount: "1,567.80 SEK",
-                icon: "laptopcomputer",
+                title: "IKEA",
+                subtitle: "Due tomorrow",
+                amount: "12 000 SEK",
+                icon: "doc.text.fill",
                 color: .yellow,
                 isOverdue: false
             )
             
             InvoiceRow(
-                title: "IKEA",
-                subtitle: "Due tomorrow",
-                amount: "12,000.00 SEK",
-                icon: "bed.double.fill",
+                title: "Netonnet",
+                subtitle: "Due in 3 days",
+                amount: "1 568 SEK",
+                icon: "doc.text.fill",
                 color: .yellow,
                 isOverdue: false
             )
@@ -291,8 +293,8 @@ struct InvoicesList: View {
             InvoiceRow(
                 title: "Elgiganten",
                 subtitle: "Due in 1 week",
-                amount: "899.90 SEK",
-                icon: "tv.fill",
+                amount: "900 SEK",
+                icon: "doc.text.fill",
                 color: .cyan,
                 isOverdue: false
             )
@@ -300,8 +302,8 @@ struct InvoicesList: View {
             InvoiceRow(
                 title: "Clas Ohlson",
                 subtitle: "Due in 2 weeks",
-                amount: "785.00 SEK",
-                icon: "wrench.and.screwdriver.fill",
+                amount: "785 SEK",
+                icon: "doc.text.fill",
                 color: .cyan,
                 isOverdue: false
             )
@@ -309,8 +311,8 @@ struct InvoicesList: View {
             InvoiceRow(
                 title: "Stadium",
                 subtitle: "Due in 1 month",
-                amount: "2,340.00 SEK",
-                icon: "figure.run",
+                amount: "2 340 SEK",
+                icon: "doc.text.fill",
                 color: .cyan,
                 isOverdue: false
             )
@@ -319,8 +321,8 @@ struct InvoicesList: View {
             InvoiceRow(
                 title: "ICA",
                 subtitle: "Paid on Dec 1",
-                amount: "452.00 SEK",
-                icon: "cart.fill",
+                amount: "452 SEK",
+                icon: "doc.text.fill",
                 color: .green,
                 isOverdue: false
             )
@@ -328,8 +330,8 @@ struct InvoicesList: View {
             InvoiceRow(
                 title: "Åhléns",
                 subtitle: "Paid on Nov 28",
-                amount: "299.90 SEK",
-                icon: "storefront.fill",
+                amount: "300 SEK",
+                icon: "doc.text.fill",
                 color: .green,
                 isOverdue: false
             )
@@ -416,15 +418,17 @@ struct InvoiceRow: View {
 }
 
 struct CreditInfoBox: View {
+    @Binding var showDetails: Bool
+    
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 12) {
             // Total available credit
             VStack(alignment: .leading, spacing: 8) {
                 Text("Total Available Credit")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 
-                Text("40,000 SEK")
+                Text("40 000 SEK")
                     .font(.system(size: 32, weight: .bold))
                     .foregroundColor(.primary)
             }
@@ -433,15 +437,97 @@ struct CreditInfoBox: View {
             Divider()
             
             // Credit accounts
-            VStack(alignment: .leading, spacing: 12) {
-                CreditAccountRow(name: "Resurs Credit Card", available: "25,000 SEK", limit: "50,000 SEK")
-                CreditAccountRow(name: "Resurs Flex Account", available: "15,000 SEK", limit: "30,000 SEK")
+            VStack(alignment: .leading, spacing: 8) {
+                CreditAccountRow(name: "Resurs Gold", available: "25 000 SEK", limit: "50 000 SEK")
+                CreditAccountRow(name: "Resurs Family", available: "15 000 SEK", limit: "30 000 SEK")
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(20)
+        .padding(16)
         .background(.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 16))
+        .onTapGesture {
+            showDetails = true
+        }
+        .sheet(isPresented: $showDetails) {
+            CreditDetailsSheet()
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.visible)
+        }
+    }
+}
+
+struct CreditDetailsSheet: View {
+    @Environment(\.dismiss) var dismiss
+    @State private var showPIN = false
+    
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 16) {
+                // PIN Code Section
+                VStack(spacing: 12) {
+                    Text("Credit Account PIN")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                    
+                    // PIN Display
+                    HStack(spacing: 12) {
+                        ForEach(showPIN ? ["1", "2", "3", "4"] : ["*", "*", "*", "*"], id: \.self) { digit in
+                            Text(digit)
+                                .font(.system(size: 32, weight: .bold))
+                                .foregroundColor(.cyan)
+                                .frame(width: 55, height: 65)
+                                .background(.ultraThinMaterial)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(Color.cyan.opacity(0.3), lineWidth: 1)
+                                )
+                        }
+                    }
+                    
+                    Text("Use this PIN for credit account purchases")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+                .padding(.top, 24)
+                
+                Spacer()
+                    .frame(height: 40)
+                
+                // Show PIN Button
+                Button(action: {
+                    withAnimation {
+                        showPIN.toggle()
+                    }
+                }) {
+                    HStack {
+                        Image(systemName: showPIN ? "eye.slash.fill" : "eye.fill")
+                            .font(.title3)
+                        Text(showPIN ? "Hide PIN" : "Show PIN")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                    }
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(Color.cyan)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 24)
+            }
+            .background(Color(UIColor.systemBackground))
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                    .foregroundColor(.cyan)
+                }
+            }
+        }
     }
 }
 
@@ -452,7 +538,7 @@ struct CreditAccountRow: View {
     
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text(name)
                     .font(.subheadline)
                     .fontWeight(.medium)
@@ -463,12 +549,18 @@ struct CreditAccountRow: View {
             
             Spacer()
             
-            Image(systemName: "chevron.right")
-                .font(.caption)
-                .foregroundColor(.secondary)
+            HStack(spacing: 6) {
+                Image(systemName: "lock.fill")
+                    .font(.caption)
+                    .foregroundColor(.cyan)
+                Text("***")
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundColor(.cyan)
+                    .tracking(2)
+            }
         }
-        .padding(12)
-        .background(Color.cyan.opacity(0.1))
+        .padding(10)
+        .background(Color.clear)
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 }
@@ -482,7 +574,7 @@ struct WalletInfoBox: View {
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 
-                Text("16,918.90 SEK")
+                Text("16 919 SEK")
                     .font(.system(size: 32, weight: .bold))
                     .foregroundColor(.primary)
                 

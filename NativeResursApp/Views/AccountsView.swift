@@ -15,107 +15,48 @@ struct AccountsView: View {
                     // Account Cards
                     VStack(spacing: 16) {
                         AccountCard(
-                            title: "Checking Account",
+                            title: "Resurs Family",
+                            accountType: "Joint Credit Account",
                             accountNumber: "**** 1234",
-                            balance: "$8,432.10",
-                            icon: "building.columns.fill",
-                            color: .blue
+                            balance: "84 321 SEK",
+                            icon: "heart.fill",
+                            color: .blue,
+                            balanceLabel: "Available Balance"
                         )
                         
                         AccountCard(
-                            title: "Savings Account",
+                            title: "Dirt Bike Savings",
+                            accountType: "Savings Account",
                             accountNumber: "**** 5678",
-                            balance: "$3,913.57",
-                            icon: "banknote.fill",
-                            color: .green
+                            balance: "39 136 SEK",
+                            icon: "chart.line.uptrend.xyaxis",
+                            color: .green,
+                            balanceLabel: "Available Balance"
                         )
                         
                         AccountCard(
-                            title: "Investment Account",
+                            title: "Jula Butikskredit",
+                            accountType: "Jula",
                             accountNumber: "**** 9012",
-                            balance: "$15,678.90",
-                            icon: "chart.line.uptrend.xyaxis",
-                            color: .purple
+                            balance: "20 000 SEK",
+                            icon: "link.circle.fill",
+                            color: .purple,
+                            balanceLabel: "Available Balance"
+                        )
+                        
+                        AccountCard(
+                            title: "Toyota Billån",
+                            accountType: "Consumer Loan",
+                            accountNumber: "**** 4567",
+                            balance: "114 300 SEK",
+                            icon: "dollarsign.circle.fill",
+                            color: .orange,
+                            balanceLabel: "Current Debt"
                         )
                     }
                     .padding(.horizontal)
                     .padding(.top, 24)
                     .padding(.bottom, 16)
-                    
-                    // Recent Transactions
-                    VStack(alignment: .leading, spacing: 16) {
-                        HStack {
-                            Text("Recent Activity")
-                                .font(.title2)
-                                .fontWeight(.semibold)
-                            Spacer()
-                            Button("See All") {
-                                // Navigate to full transaction history
-                            }
-                            .font(.subheadline)
-                            .foregroundColor(.blue)
-                        }
-                        .padding(.horizontal)
-                        
-                        VStack(spacing: 12) {
-                            TransactionRow(
-                                title: "Coffee Shop",
-                                subtitle: "Today, 2:30 PM",
-                                amount: "-$4.50",
-                                icon: "cup.and.saucer.fill",
-                                color: .brown
-                            )
-                            
-                            TransactionRow(
-                                title: "Salary Deposit",
-                                subtitle: "Yesterday, 9:00 AM",
-                                amount: "+$3,200.00",
-                                icon: "arrow.down.circle.fill",
-                                color: .green
-                            )
-                            
-                            TransactionRow(
-                                title: "Online Purchase",
-                                subtitle: "2 days ago, 7:45 PM",
-                                amount: "-$89.99",
-                                icon: "bag.fill",
-                                color: .orange
-                            )
-                            
-                            TransactionRow(
-                                title: "Grocery Store",
-                                subtitle: "2 days ago, 5:15 PM",
-                                amount: "-$127.34",
-                                icon: "cart.fill",
-                                color: .green
-                            )
-                            
-                            TransactionRow(
-                                title: "Gas Station",
-                                subtitle: "3 days ago, 8:30 AM",
-                                amount: "-$65.00",
-                                icon: "fuelpump.fill",
-                                color: .orange
-                            )
-                            
-                            TransactionRow(
-                                title: "Restaurant",
-                                subtitle: "3 days ago, 7:00 PM",
-                                amount: "-$48.50",
-                                icon: "fork.knife",
-                                color: .red
-                            )
-                            
-                            TransactionRow(
-                                title: "Refund",
-                                subtitle: "4 days ago, 2:15 PM",
-                                amount: "+$25.00",
-                                icon: "arrow.uturn.backward.circle.fill",
-                                color: .blue
-                            )
-                        }
-                        .padding(.horizontal)
-                    }
                 }
             }
             .navigationBarHidden(true)
@@ -125,83 +66,54 @@ struct AccountsView: View {
 
 struct AccountCard: View {
     let title: String
+    let accountType: String?
     let accountNumber: String
     let balance: String
     let icon: String
     let color: Color
+    let balanceLabel: String
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
+        VStack(alignment: .leading, spacing: 10) {
+            // Icon with account type
+            HStack(alignment: .center, spacing: 10) {
                 Image(systemName: icon)
                     .font(.title2)
                     .foregroundColor(color)
-                    .frame(width: 40, height: 40)
+                    .frame(width: 44, height: 44)
                     .background(color.opacity(0.2))
-                    .clipShape(Circle())
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
                 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(title)
-                        .font(.headline)
-                        .fontWeight(.semibold)
-                    Text(accountNumber)
+                if let accountType = accountType {
+                    Text(accountType)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
                 
                 Spacer()
-                
-                VStack(alignment: .trailing, spacing: 4) {
-                    Text(balance)
-                        .font(.title2)
-                        .fontWeight(.bold)
-                    Text("Available")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
             }
-        }
-        .padding(20)
-        .background(.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-    }
-}
-
-struct TransactionRow: View {
-    let title: String
-    let subtitle: String
-    let amount: String
-    let icon: String
-    let color: Color
-    
-    var body: some View {
-        HStack(spacing: 16) {
-            Image(systemName: icon)
-                .font(.title3)
-                .foregroundColor(color)
-                .frame(width: 36, height: 36)
-                .background(color.opacity(0.2))
-                .clipShape(Circle())
             
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                Text(subtitle)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
+            // Title
+            Text(title)
+                .font(.title2)
+                .fontWeight(.bold)
             
             Spacer()
+                .frame(height: 2)
             
-            Text(amount)
-                .font(.subheadline)
-                .fontWeight(.semibold)
-                .foregroundColor(amount.hasPrefix("+") ? .green : .primary)
+            // Available amount at bottom
+            VStack(alignment: .leading, spacing: 3) {
+                Text(balanceLabel)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Text(balance)
+                    .font(.system(size: 22, weight: .bold))
+            }
         }
-        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(18)
         .background(.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(RoundedRectangle(cornerRadius: 20))
     }
 }
 
