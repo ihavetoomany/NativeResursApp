@@ -14,15 +14,18 @@ struct AccountsView: View {
                 VStack(spacing: 16) {
                     // Account Cards
                     VStack(spacing: 16) {
-                        AccountCard(
-                            title: "Resurs Family",
-                            accountType: "Joint Credit Account",
-                            accountNumber: "**** 1234",
-                            balance: "84 321 SEK",
-                            icon: "heart.fill",
-                            color: .blue,
-                            balanceLabel: "Available Balance"
-                        )
+                        NavigationLink(destination: ResursFamilyAccountView()) {
+                            AccountCard(
+                                title: "Resurs Family",
+                                accountType: "Joint Credit Account",
+                                accountNumber: "**** 1234",
+                                balance: "84 321 SEK",
+                                icon: "heart.fill",
+                                color: .blue,
+                                balanceLabel: "Available Balance"
+                            )
+                        }
+                        .buttonStyle(PlainButtonStyle())
                         
                         AccountCard(
                             title: "Dirt Bike Savings",
@@ -35,7 +38,7 @@ struct AccountsView: View {
                         )
                         
                         AccountCard(
-                            title: "Jula Butikskredit",
+                            title: "Jula Credit Account",
                             accountType: "Jula",
                             accountNumber: "**** 9012",
                             balance: "20 000 SEK",
@@ -52,6 +55,16 @@ struct AccountsView: View {
                             icon: "dollarsign.circle.fill",
                             color: .orange,
                             balanceLabel: "Current Debt"
+                        )
+                        
+                        AccountCard(
+                            title: "Komplett Phone Trade In",
+                            accountType: "Komplett",
+                            accountNumber: "**** 7890",
+                            balance: "8 200 SEK",
+                            icon: "link.circle.fill",
+                            color: .cyan,
+                            balanceLabel: "Balance"
                         )
                     }
                     .padding(.horizontal)
