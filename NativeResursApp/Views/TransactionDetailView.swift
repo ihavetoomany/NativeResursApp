@@ -23,36 +23,39 @@ struct TransactionDetailView: View {
     var body: some View {
         let scrollProgress = min(scrollObserver.offset / 100, 1.0)
         
-        ZStack(alignment: .top) {
-            // Scrollable Content
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 0) {
-                    // Tracking element
-                    GeometryReader { geometry in
-                        Color.clear
-                            .onChange(of: geometry.frame(in: .named("scroll")).minY) { oldValue, newValue in
-                                scrollObserver.offset = max(0, -newValue)
-                            }
-                    }
-                    .frame(height: 0)
-                    
-                    // Account for header height
-                    Color.clear.frame(height: 80)
-                    
-                    VStack(spacing: 16) {
-                        // Transaction Details Card
-                        TransactionDetailsCard(
-                            merchant: merchant,
-                            amount: amount,
-                            date: date,
-                            time: time
-                        )
-                        .padding(.horizontal)
-                        .padding(.top, 36)
+        GeometryReader { geometry in
+            ZStack(alignment: .top) {
+                // Scrollable Content
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 0) {
+                        // Tracking element
+                        GeometryReader { geo in
+                            Color.clear
+                                .onChange(of: geo.frame(in: .named("scroll")).minY) { oldValue, newValue in
+                                    scrollObserver.offset = max(0, -newValue)
+                                }
+                        }
+                        .frame(height: 0)
+                        
+                        // Account for header height
+                        Color.clear.frame(height: 80)
+                        
+                        VStack(spacing: 16) {
+                            // Transaction Details Card
+                            TransactionDetailsCard(
+                                merchant: merchant,
+                                amount: amount,
+                                date: date,
+                                time: time
+                            )
+                            .padding(.horizontal)
+                            .padding(.top, 36)
+                            .frame(width: geometry.size.width)
                         
                         // Pockets Explanation Section
                         PocketsExplanationCard()
                             .padding(.horizontal)
+                            .frame(width: geometry.size.width)
                         
                         // Add to Pocket Section
                         VStack(alignment: .leading, spacing: 12) {
@@ -61,6 +64,7 @@ struct TransactionDetailView: View {
                                 .fontWeight(.semibold)
                                 .padding(.horizontal)
                                 .padding(.top, 16)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                             
                             if let pocket = selectedPocket {
                                 // Selected Pocket State
@@ -145,14 +149,17 @@ struct TransactionDetailView: View {
                             }
                         }
                         .padding(.bottom, 16)
+                        .frame(width: geometry.size.width)
                     }
                     .padding(.vertical, 20)
+                    .frame(width: geometry.size.width)
                 }
+                .frame(width: geometry.size.width)
             }
             .coordinateSpace(name: "scroll")
             
-            // Sticky Header (overlays the content)
-            VStack(spacing: 0) {
+                // Sticky Header (overlays the content)
+                VStack(spacing: 0) {
                 ZStack {
                     // Back button (always visible) - on the left
                     HStack {
@@ -198,10 +205,12 @@ struct TransactionDetailView: View {
                     .padding(.horizontal)
                     .padding(.bottom, 16)
                 }
+                }
+                .background(Color.black.opacity(0.85))
+                .background(.ultraThinMaterial)
+                .animation(.easeInOut(duration: 0.2), value: scrollProgress)
+                .frame(width: geometry.size.width)
             }
-            .background(Color.black.opacity(0.85))
-            .background(.ultraThinMaterial)
-            .animation(.easeInOut(duration: 0.2), value: scrollProgress)
         }
         .navigationBarHidden(true)
         .sheet(isPresented: $showNewPlanSheet) {
@@ -294,6 +303,7 @@ struct PocketsExplanationCard: View {
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .lineSpacing(4)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .padding(20)
         .background(Color.blue.opacity(0.1))
