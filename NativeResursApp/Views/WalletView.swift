@@ -26,7 +26,7 @@ struct WalletView: View {
     
     var body: some View {
         NavigationStack {
-            StickyHeaderView(title: "Wallet", subtitle: greeting, trailingButton: "person.circle.fill") {
+            StickyHeaderView(title: "John", subtitle: greeting, trailingButton: "person.circle.fill") {
                 // Sticky Pills Section
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {
@@ -436,7 +436,7 @@ struct CreditInfoBox: View {
     var body: some View {
         VStack(spacing: 12) {
             // Available credit title
-            Text("Available Credit")
+            Text("Your Credit Cards")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -545,7 +545,13 @@ struct CreditAccountRow: View {
     let limit: String
     
     var body: some View {
-        HStack {
+        HStack(alignment: .top) {
+            Image(systemName: "creditcard.fill")
+                .font(.subheadline)
+                .foregroundColor(.green)
+                .frame(width: 28, height: 28)
+                .offset(y: -4)
+            
             VStack(alignment: .leading, spacing: 2) {
                 Text(name)
                     .font(.subheadline)

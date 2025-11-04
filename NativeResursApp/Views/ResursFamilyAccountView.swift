@@ -42,10 +42,20 @@ struct ResursFamilyAccountView: View {
                     
                     // Credit Cards Section
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Your Cards")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .padding(.horizontal)
+                        HStack {
+                            Text("Family Cards")
+                                .font(.title2)
+                                .fontWeight(.semibold)
+                            Spacer()
+                            Button(action: {
+                                // Action for card options
+                            }) {
+                                Image(systemName: "ellipsis.circle.fill")
+                                    .font(.title2)
+                                    .foregroundColor(.blue)
+                            }
+                        }
+                        .padding(.horizontal)
                         
                         VStack(spacing: 12) {
                             CreditCardMini(
