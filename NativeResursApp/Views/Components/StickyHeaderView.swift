@@ -97,7 +97,7 @@ struct StickyHeaderView<Content: View, StickyContent: View>: View {
                             Button(action: {}) {
                                 Image(systemName: trailingButton)
                                     .font(.largeTitle)
-                                    .foregroundColor(Color(UIColor.systemCyan))
+                                    .foregroundColor(Color(UIColor.systemBlue))
                                     .opacity(1.0 - scrollProgress * 2)
                             }
                         } else {

@@ -37,11 +37,11 @@ struct WalletView: View {
                                 .foregroundColor(selectedTab == 0 ? .primary : .secondary)
                                 .padding(.horizontal, 24)
                                 .padding(.vertical, 12)
-                                .background(selectedTab == 0 ? Color.cyan.opacity(0.2) : Color.clear)
+                                .background(selectedTab == 0 ? Color.blue.opacity(0.2) : Color.clear)
                                 .clipShape(Capsule())
                                 .overlay(
                                     Capsule()
-                                        .stroke(selectedTab == 0 ? Color.cyan : Color.secondary.opacity(0.3), lineWidth: 1)
+                                        .stroke(selectedTab == 0 ? Color.blue : Color.secondary.opacity(0.3), lineWidth: 1)
                                 )
                         }
                         
@@ -52,11 +52,11 @@ struct WalletView: View {
                                 .foregroundColor(selectedTab == 1 ? .primary : .secondary)
                                 .padding(.horizontal, 24)
                                 .padding(.vertical, 12)
-                                .background(selectedTab == 1 ? Color.cyan.opacity(0.2) : Color.clear)
+                                .background(selectedTab == 1 ? Color.blue.opacity(0.2) : Color.clear)
                                 .clipShape(Capsule())
                                 .overlay(
                                     Capsule()
-                                        .stroke(selectedTab == 1 ? Color.cyan : Color.secondary.opacity(0.3), lineWidth: 1)
+                                        .stroke(selectedTab == 1 ? Color.blue : Color.secondary.opacity(0.3), lineWidth: 1)
                                 )
                         }
                         
@@ -67,11 +67,11 @@ struct WalletView: View {
                                 .foregroundColor(selectedTab == 2 ? .primary : .secondary)
                                 .padding(.horizontal, 24)
                                 .padding(.vertical, 12)
-                                .background(selectedTab == 2 ? Color.cyan.opacity(0.2) : Color.clear)
+                                .background(selectedTab == 2 ? Color.blue.opacity(0.2) : Color.clear)
                                 .clipShape(Capsule())
                                 .overlay(
                                     Capsule()
-                                        .stroke(selectedTab == 2 ? Color.cyan : Color.secondary.opacity(0.3), lineWidth: 1)
+                                        .stroke(selectedTab == 2 ? Color.blue : Color.secondary.opacity(0.3), lineWidth: 1)
                                     )
                             }
                         }
@@ -123,7 +123,7 @@ struct PurchasesList: View {
                     subtitle: "Yesterday, 5:15 PM",
                     amount: "23 000 SEK",
                     icon: "heart.fill",
-                    color: .cyan
+                    color: .blue
                 )
             }
             .buttonStyle(PlainButtonStyle())
@@ -141,7 +141,7 @@ struct PurchasesList: View {
                 subtitle: "2 days ago, 7:45 PM",
                 amount: "900 SEK",
                 icon: "heart.fill",
-                color: .cyan
+                color: .blue
             )
             
             PurchaseRow(
@@ -149,7 +149,7 @@ struct PurchasesList: View {
                 subtitle: "3 days ago, 7:00 PM",
                 amount: "322 SEK",
                 icon: "heart.fill",
-                color: .cyan
+                color: .blue
             )
             
             PurchaseRow(
@@ -223,7 +223,7 @@ struct ErrandsList: View {
                 title: "Set Up Auto-Pay",
                 subtitle: "Simplify payments",
                 icon: "repeat.circle.fill",
-                color: .cyan
+                color: .blue
             )
         }
         .padding(.horizontal)
@@ -483,13 +483,13 @@ struct CreditDetailsSheet: View {
                         ForEach(showPIN ? ["1", "2", "3", "4"] : ["*", "*", "*", "*"], id: \.self) { digit in
                             Text(digit)
                                 .font(.system(size: 32, weight: .bold))
-                                .foregroundColor(.cyan)
+                                .foregroundColor(.blue)
                                 .frame(width: 55, height: 65)
                                 .background(.ultraThinMaterial)
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Color.cyan.opacity(0.3), lineWidth: 1)
+                                        .stroke(Color.blue.opacity(0.3), lineWidth: 1)
                                 )
                         }
                     }
@@ -520,7 +520,7 @@ struct CreditDetailsSheet: View {
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(Color.cyan)
+                    .background(Color.blue)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
                 .padding(.horizontal)
@@ -532,7 +532,7 @@ struct CreditDetailsSheet: View {
                     Button("Done") {
                         dismiss()
                     }
-                    .foregroundColor(.cyan)
+                    .foregroundColor(.blue)
                 }
             }
         }
@@ -602,7 +602,7 @@ struct WalletInfoBox: View {
             // Payment options
             HStack(spacing: 8) {
                 Image(systemName: "square.grid.2x2.fill")
-                    .foregroundColor(.cyan)
+                    .foregroundColor(.blue)
                 Text("Part payment options available")
                     .font(.subheadline)
                     .foregroundColor(.secondary)

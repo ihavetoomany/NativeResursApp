@@ -12,6 +12,7 @@ struct ResursFamilyAccountView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var pocketsManager: PocketsManager
     @StateObject private var scrollObserver = ScrollOffsetObserver()
+    @State private var showPocketOptions = false
     
     var body: some View {
         let scrollProgress = min(scrollObserver.offset / 100, 1.0)
@@ -50,13 +51,15 @@ struct ResursFamilyAccountView: View {
                             CreditCardMini(
                                 holder: "Jane Doe",
                                 lastFour: "1234",
-                                used: "5 500 SEK"
+                                used: "5 500 SEK",
+                                color: .green
                             )
                             
                             CreditCardMini(
                                 holder: "John Doe",
                                 lastFour: "5678",
-                                used: "3 445 SEK"
+                                used: "3 445 SEK",
+                                color: .purple
                             )
                         }
                         .padding(.horizontal)
@@ -70,13 +73,12 @@ struct ResursFamilyAccountView: View {
                                 .font(.title2)
                                 .fontWeight(.semibold)
                             Spacer()
-                            Button(action: {}) {
-                                HStack(spacing: 4) {
-                                    Image(systemName: "plus.circle.fill")
-                                    Text("New Pocket")
-                                }
-                                .font(.subheadline)
-                                .foregroundColor(.cyan)
+                            Button(action: {
+                                showPocketOptions = true
+                            }) {
+                                Image(systemName: "ellipsis.circle.fill")
+                                    .font(.title2)
+                                    .foregroundColor(.blue)
                             }
                         }
                         .padding(.horizontal)
@@ -89,6 +91,7 @@ struct ResursFamilyAccountView: View {
                                     paidAmount: pocket.paidAmount,
                                     progress: pocket.progress,
                                     dueDate: pocket.dueDate,
+                                    monthlyAmount: pocket.monthlyAmount,
                                     icon: pocket.icon,
                                     color: pocket.color
                                 )
@@ -110,7 +113,7 @@ struct ResursFamilyAccountView: View {
                         Button(action: { dismiss() }) {
                             Image(systemName: "chevron.left")
                                 .font(.title3)
-                                .foregroundColor(.cyan)
+                                .foregroundColor(.blue)
                                 .frame(width: 32, height: 32)
                                 .background(.ultraThinMaterial) // Liquid glass style
                                 .clipShape(Circle())
@@ -155,6 +158,56 @@ struct ResursFamilyAccountView: View {
             .animation(.easeInOut(duration: 0.2), value: scrollProgress)
         }
         .navigationBarHidden(true)
+        .sheet(isPresented: $showPocketOptions) {
+            PocketOptionsSheet()
+                .presentationDetents([.height(220)])
+                .presentationDragIndicator(.visible)
+        }
+    }
+}
+
+struct PocketOptionsSheet: View {
+    @Environment(\.dismiss) var dismiss
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            Button(action: {
+                dismiss()
+                // Action to create new pocket
+            }) {
+                HStack {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.title3)
+                        .foregroundColor(.blue)
+                    Text("Create New Pocket")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    Spacer()
+                }
+                .padding()
+                .background(Color(UIColor.secondarySystemBackground))
+            }
+            
+            Divider()
+            
+            Button(action: {
+                dismiss()
+                // Action to view pocket history
+            }) {
+                HStack {
+                    Image(systemName: "clock.fill")
+                        .font(.title3)
+                        .foregroundColor(.blue)
+                    Text("Pocket History")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    Spacer()
+                }
+                .padding()
+                .background(Color(UIColor.secondarySystemBackground))
+            }
+        }
+        .background(Color(UIColor.systemBackground))
     }
 }
 
@@ -166,7 +219,7 @@ struct AccountOverviewCard: View {
                     Text("Available Credit")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
-                    Text("58 855 SEK")
+                    Text("56 005 SEK")
                         .font(.system(size: 32, weight: .bold))
                 }
                 
@@ -199,7 +252,7 @@ struct AccountOverviewCard: View {
                     Text("In Pockets")
                         .font(.caption)
                         .foregroundColor(.secondary)
-                    Text("12 200 SEK")
+                    Text("15 050 SEK")
                         .font(.headline)
                         .fontWeight(.semibold)
                 }
@@ -217,14 +270,15 @@ struct CreditCardMini: View {
     let holder: String
     let lastFour: String
     let used: String
+    let color: Color
     
     var body: some View {
         HStack(spacing: 16) {
             Image(systemName: "creditcard.fill")
                 .font(.title3)
-                .foregroundColor(.cyan)
+                .foregroundColor(color)
                 .frame(width: 36, height: 36)
-                .background(Color.cyan.opacity(0.2))
+                .background(color.opacity(0.2))
                 .clipShape(Circle())
             
             VStack(alignment: .leading, spacing: 4) {
@@ -259,6 +313,7 @@ struct PocketCard: View {
     let paidAmount: String
     let progress: Double
     let dueDate: String
+    let monthlyAmount: String?
     let icon: String
     let color: Color
     
@@ -276,9 +331,15 @@ struct PocketCard: View {
                     Text(title)
                         .font(.headline)
                         .fontWeight(.semibold)
-                    Text(dueDate)
-                        .font(.caption)
-                        .foregroundColor(progress == 1.0 ? .green : .secondary)
+                    if let monthly = monthlyAmount {
+                        Text("\(dueDate) (\(monthly))")
+                            .font(.caption)
+                            .foregroundColor(progress == 1.0 ? .green : .secondary)
+                    } else {
+                        Text(dueDate)
+                            .font(.caption)
+                            .foregroundColor(progress == 1.0 ? .green : .secondary)
+                    }
                 }
                 
                 Spacer()

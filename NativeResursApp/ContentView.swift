@@ -42,7 +42,7 @@ struct ContentView: View {
                 .tag(3)
         }
         .environmentObject(pocketsManager)
-        .tint(Color(UIColor.systemCyan))
+        .tint(Color(UIColor.systemBlue))
         .onAppear {
             // Configure tab bar appearance for Liquid Glass effect in dark mode
             let appearance = UITabBarAppearance()
@@ -56,8 +56,8 @@ struct ContentView: View {
             // Dark mode tab bar styling
             appearance.stackedLayoutAppearance.normal.iconColor = UIColor.lightGray
             appearance.stackedLayoutAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.lightGray]
-            appearance.stackedLayoutAppearance.selected.iconColor = UIColor.systemCyan
-            appearance.stackedLayoutAppearance.selected.titleTextAttributes = [.foregroundColor: UIColor.systemCyan]
+            appearance.stackedLayoutAppearance.selected.iconColor = UIColor.systemBlue
+            appearance.stackedLayoutAppearance.selected.titleTextAttributes = [.foregroundColor: UIColor.systemBlue]
             
             UITabBar.appearance().standardAppearance = appearance
             UITabBar.appearance().scrollEdgeAppearance = appearance

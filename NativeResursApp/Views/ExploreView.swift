@@ -99,7 +99,7 @@ struct ExploreView: View {
                                 // Navigate to news
                             }
                             .font(.subheadline)
-                                .foregroundColor(.cyan)
+                                .foregroundColor(.blue)
                         }
                         .padding(.horizontal)
                         
@@ -228,10 +228,10 @@ struct NewsRow: View {
                 Text(category.uppercased())
                     .font(.caption)
                     .fontWeight(.semibold)
-                                .foregroundColor(.cyan)
+                                .foregroundColor(.blue)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(.cyan.opacity(0.2))
+                    .background(.blue.opacity(0.2))
                     .clipShape(Capsule())
                 
                 Text(title)

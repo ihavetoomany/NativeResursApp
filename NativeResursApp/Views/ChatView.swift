@@ -193,7 +193,7 @@ struct ConversationRow: View {
     var body: some View {
         HStack(spacing: 16) {
             Circle()
-                        .fill(unread ? .cyan : .secondary.opacity(0.3))
+                        .fill(unread ? .blue : .secondary.opacity(0.3))
                 .frame(width: 12, height: 12)
             
             VStack(alignment: .leading, spacing: 4) {
@@ -214,7 +214,7 @@ struct ConversationRow: View {
                     .foregroundColor(.secondary)
                 if unread {
                     Circle()
-                        .fill(.cyan)
+                        .fill(.blue)
                         .frame(width: 8, height: 8)
                 }
             }

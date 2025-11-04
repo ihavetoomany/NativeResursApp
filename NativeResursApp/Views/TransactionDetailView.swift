@@ -73,7 +73,7 @@ struct TransactionDetailView: View {
                                         title: pocket,
                                         amount: amount,
                                         icon: pocketsManager.pockets.first(where: { $0.name == pocket })?.icon ?? "tray.fill",
-                                        color: pocketsManager.pockets.first(where: { $0.name == pocket })?.color ?? .cyan,
+                                        color: pocketsManager.pockets.first(where: { $0.name == pocket })?.color ?? .blue,
                                         isNewPocket: pocketsManager.pockets.first(where: { $0.name == pocket })?.dueDate == "Just created"
                                     )
                                     
@@ -98,7 +98,7 @@ struct TransactionDetailView: View {
                                 VStack(spacing: 12) {
                                     // Existing Pockets (excluding paid off and unbilled)
                                     ForEach(pocketsManager.pockets.filter { 
-                                        $0.progress < 1.0 && $0.name != "Unbilled - November" 
+                                        $0.progress < 1.0 && $0.name != "Unbilled Purchases" 
                                     }) { pocket in
                                         Button(action: {
                                             withAnimation {
@@ -121,7 +121,7 @@ struct TransactionDetailView: View {
                                         HStack {
                                             Image(systemName: "plus.circle.fill")
                                                 .font(.title3)
-                                                .foregroundColor(.cyan)
+                                                .foregroundColor(.blue)
                                                 .frame(width: 36, height: 36)
                                             
                                             VStack(alignment: .leading, spacing: 4) {
@@ -166,7 +166,7 @@ struct TransactionDetailView: View {
                         Button(action: { dismiss() }) {
                             Image(systemName: "chevron.left")
                                 .font(.title3)
-                                .foregroundColor(.cyan)
+                                .foregroundColor(.blue)
                                 .frame(width: 32, height: 32)
                                 .background(.ultraThinMaterial)
                                 .clipShape(Circle())
@@ -246,7 +246,7 @@ struct TransactionDetailsCard: View {
                 HStack(spacing: 8) {
                     Image(systemName: "heart.fill")
                         .font(.caption)
-                        .foregroundColor(.cyan)
+                        .foregroundColor(.blue)
                     Text("Paid with Resurs Family")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
@@ -341,7 +341,7 @@ struct ExistingPocketRow: View {
             
             Image(systemName: "plus.circle")
                 .font(.title3)
-                .foregroundColor(.cyan)
+                .foregroundColor(.blue)
         }
         .padding(16)
         .background(.ultraThinMaterial)
@@ -470,7 +470,7 @@ struct NewPocketSheet: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(pocketName.isEmpty ? Color.gray : Color.cyan)
+                        .background(pocketName.isEmpty ? Color.gray : Color.blue)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
                 .disabled(pocketName.isEmpty)
