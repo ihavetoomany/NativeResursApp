@@ -108,72 +108,80 @@ struct PurchasesList: View {
                 title: "Coffee Shop",
                 subtitle: "Today, 2:30 PM",
                 amount: "45 SEK",
-                icon: "cup.and.saucer.fill",
+                icon: "creditcard.fill",
                 color: .brown
             )
             
-            PurchaseRow(
-                title: "Grocery Store",
-                subtitle: "Yesterday, 5:15 PM",
-                amount: "679 SEK",
-                icon: "cart.fill",
-                color: .green
-            )
+            NavigationLink(destination: TransactionDetailView(
+                merchant: "IKEA",
+                amount: "23 000 SEK",
+                date: "Nov 2, 2025",
+                time: "5:15 PM"
+            )) {
+                PurchaseRow(
+                    title: "IKEA",
+                    subtitle: "Yesterday, 5:15 PM",
+                    amount: "23 000 SEK",
+                    icon: "heart.fill",
+                    color: .cyan
+                )
+            }
+            .buttonStyle(PlainButtonStyle())
             
             PurchaseRow(
                 title: "Gas Station",
                 subtitle: "Yesterday, 8:30 AM",
                 amount: "452 SEK",
-                icon: "fuelpump.fill",
-                color: .orange
+                icon: "creditcard.fill",
+                color: .brown
             )
             
             PurchaseRow(
                 title: "Online Purchase",
                 subtitle: "2 days ago, 7:45 PM",
                 amount: "900 SEK",
-                icon: "bag.fill",
-                color: .purple
+                icon: "heart.fill",
+                color: .cyan
             )
             
             PurchaseRow(
                 title: "Restaurant",
                 subtitle: "3 days ago, 7:00 PM",
                 amount: "322 SEK",
-                icon: "fork.knife",
-                color: .red
+                icon: "heart.fill",
+                color: .cyan
             )
             
             PurchaseRow(
                 title: "Pharmacy",
                 subtitle: "4 days ago, 11:20 AM",
                 amount: "235 SEK",
-                icon: "cross.fill",
-                color: .pink
+                icon: "creditcard.fill",
+                color: .brown
             )
             
             PurchaseRow(
                 title: "Bookstore",
                 subtitle: "5 days ago, 3:15 PM",
                 amount: "190 SEK",
-                icon: "book.fill",
-                color: .indigo
+                icon: "creditcard.fill",
+                color: .brown
             )
             
             PurchaseRow(
                 title: "Movie Theater",
                 subtitle: "6 days ago, 8:45 PM",
                 amount: "245 SEK",
-                icon: "tv.fill",
-                color: .cyan
+                icon: "creditcard.fill",
+                color: .brown
             )
             
             PurchaseRow(
                 title: "Clothing Store",
                 subtitle: "1 week ago, 2:30 PM",
                 amount: "1 568 SEK",
-                icon: "tshirt.fill",
-                color: .mint
+                icon: "creditcard.fill",
+                color: .brown
             )
         }
         .padding(.horizontal)
@@ -286,15 +294,6 @@ struct InvoicesList: View {
             
             // Due within 4 days (yellow)
             InvoiceRow(
-                title: "IKEA",
-                subtitle: "Due tomorrow",
-                amount: "12 000 SEK",
-                icon: "doc.text.fill",
-                color: .yellow,
-                isOverdue: false
-            )
-            
-            InvoiceRow(
                 title: "Netonnet",
                 subtitle: "Due in 3 days",
                 amount: "1 568 SEK",
@@ -309,32 +308,32 @@ struct InvoicesList: View {
                 subtitle: "Due in 1 week",
                 amount: "900 SEK",
                 icon: "doc.text.fill",
-                color: .cyan,
-                isOverdue: false
-            )
-            
-            InvoiceRow(
-                title: "Clas Ohlson",
-                subtitle: "Due in 2 weeks",
-                amount: "785 SEK",
-                icon: "doc.text.fill",
-                color: .cyan,
-                isOverdue: false
-            )
-            
-            InvoiceRow(
-                title: "Stadium",
-                subtitle: "Due in 1 month",
-                amount: "2 340 SEK",
-                icon: "doc.text.fill",
-                color: .cyan,
+                color: .yellow,
                 isOverdue: false
             )
             
             // Paid invoices at the bottom
             InvoiceRow(
+                title: "Clas Ohlson",
+                subtitle: "Paid on Nov 15",
+                amount: "785 SEK",
+                icon: "doc.text.fill",
+                color: .green,
+                isOverdue: false
+            )
+            
+            InvoiceRow(
+                title: "Stadium",
+                subtitle: "Paid on Nov 8",
+                amount: "2 340 SEK",
+                icon: "doc.text.fill",
+                color: .green,
+                isOverdue: false
+            )
+            
+            InvoiceRow(
                 title: "ICA",
-                subtitle: "Paid on Dec 1",
+                subtitle: "Paid on Nov 3",
                 amount: "452 SEK",
                 icon: "doc.text.fill",
                 color: .green,
@@ -343,7 +342,7 @@ struct InvoicesList: View {
             
             InvoiceRow(
                 title: "Åhléns",
-                subtitle: "Paid on Nov 28",
+                subtitle: "Paid on Oct 28",
                 amount: "300 SEK",
                 icon: "doc.text.fill",
                 color: .green,
@@ -436,17 +435,11 @@ struct CreditInfoBox: View {
     
     var body: some View {
         VStack(spacing: 12) {
-            // Total available credit
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Total Available Credit")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                
-                Text("40 000 SEK")
-                    .font(.system(size: 32, weight: .bold))
-                    .foregroundColor(.primary)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            // Available credit title
+            Text("Available Credit")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
             Divider()
             
@@ -458,6 +451,7 @@ struct CreditInfoBox: View {
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(16)
+        .background(Color.green.opacity(0.1))
         .background(.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .onTapGesture {
@@ -566,14 +560,14 @@ struct CreditAccountRow: View {
             HStack(spacing: 6) {
                 Image(systemName: "lock.fill")
                     .font(.caption)
-                    .foregroundColor(.cyan)
+                    .foregroundColor(.green)
                 Text("***")
                     .font(.system(size: 12, weight: .bold))
-                    .foregroundColor(.cyan)
+                    .foregroundColor(.green)
                     .tracking(2)
             }
         }
-        .padding(10)
+        .padding(.vertical, 10)
         .background(Color.clear)
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }
@@ -588,7 +582,7 @@ struct WalletInfoBox: View {
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 
-                Text("16 919 SEK")
+                Text("5 820 SEK")
                     .font(.system(size: 32, weight: .bold))
                     .foregroundColor(.primary)
                 
@@ -616,6 +610,7 @@ struct WalletInfoBox: View {
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(20)
+        .background(Color.orange.opacity(0.1))
         .background(.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 16))
     }

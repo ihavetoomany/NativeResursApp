@@ -19,7 +19,7 @@ struct AccountsView: View {
                                 title: "Resurs Family",
                                 accountType: "Joint Credit Account",
                                 accountNumber: "**** 1234",
-                                balance: "84 321 SEK",
+                                balance: "58 855 SEK",
                                 icon: "heart.fill",
                                 color: .blue,
                                 balanceLabel: "Available Balance"

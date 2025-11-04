@@ -89,7 +89,8 @@ struct StickyHeaderView<Content: View, StickyContent: View>: View {
                                 .foregroundColor(.primary)
                         }
                         
-                        // Icon - fades out
+                    // Icon - fades out
+                    if !trailingButton.isEmpty {
                         if scrollProgress < 0.5 {
                             Spacer()
                             
@@ -104,6 +105,7 @@ struct StickyHeaderView<Content: View, StickyContent: View>: View {
                         }
                     }
                 }
+            }
                 .padding(.horizontal)
                 .padding(.vertical, 20 - (scrollProgress * 10)) // Shrink vertical padding
                 

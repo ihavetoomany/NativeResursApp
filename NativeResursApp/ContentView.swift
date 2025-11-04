@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var selectedTab = 0
+    @StateObject private var pocketsManager = PocketsManager()
     
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -40,6 +41,7 @@ struct ContentView: View {
                 }
                 .tag(3)
         }
+        .environmentObject(pocketsManager)
         .tint(Color(UIColor.systemCyan))
         .onAppear {
             // Configure tab bar appearance for Liquid Glass effect in dark mode

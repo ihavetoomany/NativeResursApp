@@ -6,18 +6,37 @@
 //
 
 import SwiftUI
+import Combine
 
 struct ResursFamilyAccountView: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var pocketsManager: PocketsManager
+    @StateObject private var scrollObserver = ScrollOffsetObserver()
     
     var body: some View {
-        NavigationStack {
-            StickyHeaderView(title: "Resurs Family", subtitle: "Joint Credit Account", trailingButton: "gearshape.fill") {
-                VStack(spacing: 16) {
+        let scrollProgress = min(scrollObserver.offset / 100, 1.0)
+        
+        ZStack(alignment: .top) {
+            // Scrollable Content
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 0) {
+                    // Tracking element
+                    GeometryReader { geometry in
+                        Color.clear
+                            .onChange(of: geometry.frame(in: .named("scroll")).minY) { oldValue, newValue in
+                                scrollObserver.offset = max(0, -newValue)
+                            }
+                    }
+                    .frame(height: 0)
+                    
+                    // Account for header height
+                    Color.clear.frame(height: 80)
+                    
+                    VStack(spacing: 16) {
                     // Account Overview Card
                     AccountOverviewCard()
                         .padding(.horizontal)
-                        .padding(.top, 24)
+                        .padding(.top, 36)
                         .padding(.bottom, 16)
                     
                     // Credit Cards Section
@@ -29,32 +48,32 @@ struct ResursFamilyAccountView: View {
                         
                         VStack(spacing: 12) {
                             CreditCardMini(
-                                holder: "Your Card",
+                                holder: "Jane Doe",
                                 lastFour: "1234",
-                                limit: "42 160 SEK"
+                                used: "5 500 SEK"
                             )
                             
                             CreditCardMini(
-                                holder: "Partner's Card",
+                                holder: "John Doe",
                                 lastFour: "5678",
-                                limit: "42 160 SEK"
+                                used: "3 445 SEK"
                             )
                         }
                         .padding(.horizontal)
                     }
                     .padding(.bottom, 16)
                     
-                    // Plans Section
+                    // Pockets Section
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
-                            Text("Active Plans")
+                            Text("Active Pockets")
                                 .font(.title2)
                                 .fontWeight(.semibold)
                             Spacer()
                             Button(action: {}) {
                                 HStack(spacing: 4) {
                                     Image(systemName: "plus.circle.fill")
-                                    Text("New Plan")
+                                    Text("New Pocket")
                                 }
                                 .font(.subheadline)
                                 .foregroundColor(.cyan)
@@ -63,42 +82,79 @@ struct ResursFamilyAccountView: View {
                         .padding(.horizontal)
                         
                         VStack(spacing: 12) {
-                            PlanCard(
-                                title: "Summer Vacation 2025",
-                                totalAmount: "45 000 SEK",
-                                paidAmount: "12 000 SEK",
-                                progress: 0.27,
-                                dueDate: "Paid off in 3 months",
-                                icon: "airplane.departure",
-                                color: .blue
-                            )
-                            
-                            PlanCard(
-                                title: "New Kitchen Appliances",
-                                totalAmount: "28 500 SEK",
-                                paidAmount: "28 500 SEK",
-                                progress: 1.0,
-                                dueDate: "Paid off",
-                                icon: "house.fill",
-                                color: .green
-                            )
-                            
-                            PlanCard(
-                                title: "Home Office Setup",
-                                totalAmount: "18 200 SEK",
-                                paidAmount: "6 000 SEK",
-                                progress: 0.33,
-                                dueDate: "Paid off in 6 months",
-                                icon: "desktopcomputer",
-                                color: .purple
-                            )
+                            ForEach(pocketsManager.pockets) { pocket in
+                                PocketCard(
+                                    title: pocket.name,
+                                    totalAmount: pocket.totalAmount,
+                                    paidAmount: pocket.paidAmount,
+                                    progress: pocket.progress,
+                                    dueDate: pocket.dueDate,
+                                    icon: pocket.icon,
+                                    color: pocket.color
+                                )
+                            }
                         }
                         .padding(.horizontal)
                     }
                 }
+                .padding(.vertical, 20)
+                }
             }
-            .navigationBarHidden(true)
+            .coordinateSpace(name: "scroll")
+            
+            // Sticky Header (overlays the content)
+            VStack(spacing: 0) {
+                ZStack {
+                    // Back button (always visible) - on the left
+                    HStack {
+                        Button(action: { dismiss() }) {
+                            Image(systemName: "chevron.left")
+                                .font(.title3)
+                                .foregroundColor(.cyan)
+                                .frame(width: 32, height: 32)
+                                .background(.ultraThinMaterial) // Liquid glass style
+                                .clipShape(Circle())
+                        }
+                        Spacer()
+                    }
+                    
+                    // Minimized title - centered in view
+                    if scrollProgress > 0.5 {
+                        Text("Resurs Family")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.primary)
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.top, 8)
+                .padding(.bottom, scrollProgress > 0.5 ? 8 : 12)
+                
+                // Title and subtitle - only shown when not minimized
+                if scrollProgress <= 0.5 {
+                    VStack(alignment: .leading, spacing: 4) {
+                        // Subtitle
+                        Text("Joint Credit Account")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .opacity(1.0 - scrollProgress * 2)
+                        
+                        // Title
+                        Text("Resurs Family")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .foregroundColor(.primary)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                    .padding(.bottom, 16)
+                }
+            }
+            .background(Color.black.opacity(0.85))
+            .background(.ultraThinMaterial)
+            .animation(.easeInOut(duration: 0.2), value: scrollProgress)
         }
+        .navigationBarHidden(true)
     }
 }
 
@@ -107,10 +163,10 @@ struct AccountOverviewCard: View {
         VStack(spacing: 16) {
             HStack {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Shared Credit Limit")
+                    Text("Available Credit")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
-                    Text("84 321 SEK")
+                    Text("58 855 SEK")
                         .font(.system(size: 32, weight: .bold))
                 }
                 
@@ -128,10 +184,10 @@ struct AccountOverviewCard: View {
             
             HStack(spacing: 24) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Available")
+                    Text("Shared Limit")
                         .font(.caption)
                         .foregroundColor(.secondary)
-                    Text("42 160 SEK")
+                    Text("80 000 SEK")
                         .font(.headline)
                         .fontWeight(.semibold)
                 }
@@ -140,10 +196,10 @@ struct AccountOverviewCard: View {
                     .frame(height: 30)
                 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("In Plans")
+                    Text("In Pockets")
                         .font(.caption)
                         .foregroundColor(.secondary)
-                    Text("42 161 SEK")
+                    Text("12 200 SEK")
                         .font(.headline)
                         .fontWeight(.semibold)
                 }
@@ -160,7 +216,7 @@ struct AccountOverviewCard: View {
 struct CreditCardMini: View {
     let holder: String
     let lastFour: String
-    let limit: String
+    let used: String
     
     var body: some View {
         HStack(spacing: 16) {
@@ -183,10 +239,10 @@ struct CreditCardMini: View {
             Spacer()
             
             VStack(alignment: .trailing, spacing: 4) {
-                Text(limit)
+                Text(used)
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                Text("Limit")
+                Text("Used")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -197,7 +253,7 @@ struct CreditCardMini: View {
     }
 }
 
-struct PlanCard: View {
+struct PocketCard: View {
     let title: String
     let totalAmount: String
     let paidAmount: String
@@ -266,6 +322,7 @@ struct PlanCard: View {
 
 #Preview {
     ResursFamilyAccountView()
+        .environmentObject(PocketsManager())
         .preferredColorScheme(.dark)
 }
 
