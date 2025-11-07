@@ -152,8 +152,8 @@ struct ExploreView: View {
             }
             .navigationBarHidden(true)
         }
+        }
     }
-}
 
 struct FeaturedCard: View {
     let title: String

@@ -15,15 +15,15 @@ struct AccountsView: View {
                     // Account Cards
                     VStack(spacing: 16) {
                         NavigationLink(destination: ResursFamilyAccountView()) {
-                            AccountCard(
+                        AccountCard(
                                 title: "Resurs Family",
                                 accountType: "Joint Credit Account",
-                                accountNumber: "**** 1234",
+                            accountNumber: "**** 1234",
                                 balance: "56 005 SEK",
                                 icon: "heart.fill",
                                 color: .blue,
                                 balanceLabel: "Available Balance"
-                            )
+                        )
                         }
                         .buttonStyle(PlainButtonStyle())
                         
@@ -65,17 +65,17 @@ struct AccountsView: View {
                             icon: "link.circle.fill",
                             color: .blue,
                             balanceLabel: "Balance"
-                        )
-                    }
-                    .padding(.horizontal)
+                            )
+                        }
+                        .padding(.horizontal)
                     .padding(.top, 24)
                     .padding(.bottom, 16)
                 }
             }
             .navigationBarHidden(true)
         }
+        }
     }
-}
 
 struct AccountCard: View {
     let title: String
@@ -108,8 +108,8 @@ struct AccountCard: View {
             
             // Title
             Text(title)
-                .font(.title2)
-                .fontWeight(.bold)
+                        .font(.title2)
+                        .fontWeight(.bold)
             
             Spacer()
                 .frame(height: 2)

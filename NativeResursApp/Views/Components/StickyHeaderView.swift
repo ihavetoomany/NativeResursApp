@@ -17,22 +17,25 @@ struct StickyHeaderView<Content: View, StickyContent: View>: View {
     let title: String
     let subtitle: String
     let trailingButton: String
+    let trailingButtonAction: (() -> Void)?
     let content: Content
     let stickyContent: StickyContent?
     @StateObject private var scrollObserver = ScrollOffsetObserver()
     
-    init(title: String, subtitle: String, trailingButton: String = "person.circle.fill", @ViewBuilder content: () -> Content) where StickyContent == EmptyView {
+    init(title: String, subtitle: String, trailingButton: String = "person.circle.fill", trailingButtonAction: (() -> Void)? = nil, @ViewBuilder content: () -> Content) where StickyContent == EmptyView {
         self.title = title
         self.subtitle = subtitle
         self.trailingButton = trailingButton
+        self.trailingButtonAction = trailingButtonAction
         self.content = content()
         self.stickyContent = nil
     }
     
-    init(title: String, subtitle: String, trailingButton: String = "person.circle.fill", @ViewBuilder stickyContent: () -> StickyContent, @ViewBuilder content: () -> Content) {
+    init(title: String, subtitle: String, trailingButton: String = "person.circle.fill", trailingButtonAction: (() -> Void)? = nil, @ViewBuilder stickyContent: () -> StickyContent, @ViewBuilder content: () -> Content) {
         self.title = title
         self.subtitle = subtitle
         self.trailingButton = trailingButton
+        self.trailingButtonAction = trailingButtonAction
         self.stickyContent = stickyContent()
         self.content = content()
     }
@@ -94,7 +97,9 @@ struct StickyHeaderView<Content: View, StickyContent: View>: View {
                         if scrollProgress < 0.5 {
                             Spacer()
                             
-                            Button(action: {}) {
+                            Button(action: {
+                                trailingButtonAction?()
+                            }) {
                                 Image(systemName: trailingButton)
                                     .font(.largeTitle)
                                     .foregroundColor(Color(UIColor.systemBlue))

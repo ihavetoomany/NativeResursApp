@@ -31,9 +31,9 @@ struct WalletView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {
                         Button(action: { selectedTab = 0 }) {
-                            Text("Invoices")
-                                .font(.headline)
-                                .fontWeight(.semibold)
+                                Text("Invoices")
+                                    .font(.headline)
+                                    .fontWeight(.semibold)
                                 .foregroundColor(selectedTab == 0 ? .primary : .secondary)
                                 .padding(.horizontal, 24)
                                 .padding(.vertical, 12)
@@ -46,9 +46,9 @@ struct WalletView: View {
                         }
                         
                         Button(action: { selectedTab = 1 }) {
-                            Text("Purchases")
-                                .font(.headline)
-                                .fontWeight(.semibold)
+                                Text("Purchases")
+                                    .font(.headline)
+                                    .fontWeight(.semibold)
                                 .foregroundColor(selectedTab == 1 ? .primary : .secondary)
                                 .padding(.horizontal, 24)
                                 .padding(.vertical, 12)
@@ -80,7 +80,7 @@ struct WalletView: View {
                     .padding(.bottom, 12)
                 } content: {
                     VStack(spacing: 16) {
-                        // Content based on selected tab
+                    // Content based on selected tab
                         if selectedTab == 0 {
                             InvoicesList()
                         } else if selectedTab == 1 {
@@ -118,13 +118,13 @@ struct PurchasesList: View {
                 date: "Nov 2, 2025",
                 time: "5:15 PM"
             )) {
-                PurchaseRow(
+            PurchaseRow(
                     title: "IKEA",
-                    subtitle: "Yesterday, 5:15 PM",
+                subtitle: "Yesterday, 5:15 PM",
                     amount: "23 000 SEK",
                     icon: "heart.fill",
                     color: .blue
-                )
+            )
             }
             .buttonStyle(PlainButtonStyle())
             

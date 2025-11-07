@@ -150,8 +150,8 @@ struct ChatView: View {
             }
             .navigationBarHidden(true)
         }
+        }
     }
-}
 
 struct HelpOptionCard: View {
     let title: String
