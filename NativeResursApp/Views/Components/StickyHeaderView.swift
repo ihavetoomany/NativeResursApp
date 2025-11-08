@@ -45,25 +45,34 @@ struct StickyHeaderView<Content: View, StickyContent: View>: View {
         
         ZStack(alignment: .top) {
             // Scrollable Content
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 0) {
-                    // Tracking element
-                    GeometryReader { geometry in
-                        Color.clear
-                            .onChange(of: geometry.frame(in: .named("scroll")).minY) { oldValue, newValue in
-                                scrollObserver.offset = max(0, -newValue)
-                            }
+            ScrollViewReader { proxy in
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 0) {
+                        // Tracking element
+                        GeometryReader { geometry in
+                            Color.clear
+                                .onChange(of: geometry.frame(in: .named("scroll")).minY) { oldValue, newValue in
+                                    scrollObserver.offset = max(0, -newValue)
+                                }
+                        }
+                        .frame(height: 0)
+                        .id("scrollTop") // ID for scroll to top
+                        
+                        // Account for header + sticky section if present
+                        Color.clear.frame(height: stickyContent != nil ? 160 : 90)
+                        
+                        VStack(spacing: 20) {
+                            content
+                        }
+                        .padding(.bottom, 100) // Add bottom padding to clear custom tab bar
                     }
-                    .frame(height: 0)
-                    
-                    // Account for header + sticky section if present
-                    Color.clear.frame(height: stickyContent != nil ? 160 : 90)
-                    
-                    VStack(spacing: 20) {
-                        content
+                    .padding(.top)
+                }
+                .onReceive(NotificationCenter.default.publisher(for: .scrollToTop)) { _ in
+                    withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                        proxy.scrollTo("scrollTop", anchor: .top)
                     }
                 }
-                .padding(.vertical)
             }
             .coordinateSpace(name: "scroll")
             

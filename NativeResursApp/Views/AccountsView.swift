@@ -8,22 +8,26 @@
 import SwiftUI
 
 struct AccountsView: View {
+    @State private var navigationPath = NavigationPath()
+    
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             StickyHeaderView(title: "Accounts", subtitle: "Your engagements", trailingButton: "person.circle.fill") {
                 VStack(spacing: 16) {
                     // Account Cards
                     VStack(spacing: 16) {
-                        NavigationLink(destination: ResursFamilyAccountView()) {
-                        AccountCard(
+                        Button {
+                            navigationPath.append("ResursFamily")
+                        } label: {
+                            AccountCard(
                                 title: "Resurs Family",
                                 accountType: "Joint Credit Account",
-                            accountNumber: "**** 1234",
+                                accountNumber: "**** 1234",
                                 balance: "56 005 SEK",
                                 icon: "heart.fill",
                                 color: .blue,
                                 balanceLabel: "Available Balance"
-                        )
+                            )
                         }
                         .buttonStyle(PlainButtonStyle())
                         
@@ -73,9 +77,21 @@ struct AccountsView: View {
                 }
             }
             .navigationBarHidden(true)
-        }
+            .navigationDestination(for: String.self) { value in
+                if value == "ResursFamily" {
+                    ResursFamilyAccountView()
+                }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .scrollToTop)) { _ in
+                // If not at root level, pop to root
+                if !navigationPath.isEmpty {
+                    navigationPath.removeLast(navigationPath.count)
+                }
+                // If at root, the StickyHeaderView will handle scrolling to top
+            }
         }
     }
+}
 
 struct AccountCard: View {
     let title: String

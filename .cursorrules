@@ -1,0 +1,148 @@
+# iOS Native Development Guidelines for NativeResursApp
+
+## Core Principles
+- ALWAYS follow Apple Human Interface Guidelines (HIG)
+- Use ONLY native SwiftUI and UIKit components
+- Implement liquid glass (glassmorphism) effects for modern iOS aesthetics
+- Prioritize native iOS design patterns and user experience
+
+## SwiftUI Best Practices
+
+### Design System
+- Use SF Symbols for all icons (never custom icon fonts or images unless absolutely necessary)
+- Utilize native iOS color system: `.primary`, `.secondary`, `.tertiary`, `Color(uiColor: .systemBlue)`, etc.
+- Implement Dynamic Type for accessibility
+- Support both light and dark mode with semantic colors
+- Use native spacing: `.padding()`, `.spacing()` with standard values (8, 12, 16, 20, 24, 32)
+
+### Liquid Glass / Glassmorphism Effects
+- Use `UIBlurEffect` with materials like `.systemUltraThinMaterial`, `.systemThinMaterial`, `.systemMaterial`
+- Apply `.background(.ultraThinMaterial)`, `.background(.thinMaterial)`, `.background(.regularMaterial)`, `.background(.thickMaterial)` for SwiftUI
+- For custom glassmorphism: combine blur effects with `.opacity()` and `.background()` modifiers
+- Use translucent backgrounds with blur: `UIColor.black.withAlphaComponent(0.6)` + blur effect
+- Implement vibrancy effects with `UIVibrancyEffect` when needed
+
+### Navigation & Layout
+- Use native navigation: `NavigationStack`, `NavigationLink`, `NavigationSplitView` for iPad
+- Implement `TabView` for tab-based navigation (never custom tab bars unless essential)
+- Use `List` and `Form` for structured content
+- Use `ScrollView` with native scroll behaviors
+- Follow iOS safe area guidelines with `.ignoresSafeArea()` only when intentional
+
+### Components & Controls
+- Use native controls: `Button`, `Toggle`, `Picker`, `Slider`, `Stepper`, `TextField`, `SecureField`
+- Implement `Menu` for contextual actions
+- Use `.swipeActions()` for list item actions
+- Apply native button styles: `.buttonStyle(.bordered)`, `.buttonStyle(.borderedProminent)`, `.buttonStyle(.plain)`
+- Use `.confirmationDialog()` and `.alert()` for user confirmations
+
+### Animations & Transitions
+- Use native transitions: `.transition(.slide)`, `.transition(.opacity)`, `.transition(.scale)`
+- Apply spring animations: `.animation(.spring(response: 0.3, dampingFraction: 0.7))` or `.spring`
+- Use `.withAnimation()` for state-driven animations
+- Implement gesture-driven interactions with `.gesture()` modifiers
+- Follow iOS motion guidelines (respect reduced motion accessibility setting)
+
+### Visual Effects
+- Apply corner radius with `.clipShape(RoundedRectangle(cornerRadius: X))` or `.cornerRadius()`
+- Use iOS standard corner radii: 8, 10, 12, 16, 20
+- Implement shadows with `.shadow(color:radius:x:y:)` sparingly (iOS prefers elevation through blur/material)
+- Use `.overlay()` and `.background()` for layering
+- Apply `.blendMode()` when needed for special visual effects
+
+### Performance & State Management
+- Use `@State`, `@Binding`, `@StateObject`, `@ObservedObject`, `@EnvironmentObject` appropriately
+- Prefer `@StateObject` for object creation, `@ObservedObject` for passed objects
+- Use `@Environment` for system values and custom environment values
+- Implement async/await for asynchronous operations
+- Use `.task()` modifier for async work tied to view lifecycle
+
+### Accessibility
+- Always provide accessibility labels: `.accessibilityLabel()`, `.accessibilityHint()`
+- Use `.accessibilityElement(children: .combine)` for grouping
+- Support VoiceOver with meaningful descriptions
+- Respect Dynamic Type with `.dynamicTypeSize()` limits when needed
+- Support Reduce Motion with `@Environment(\.accessibilityReduceMotion)`
+- Ensure color contrast meets WCAG guidelines
+
+### Data Display
+- Use `List` with proper list styles: `.listStyle(.insetGrouped)`, `.listStyle(.plain)`, `.listStyle(.sidebar)`
+- Implement pull-to-refresh with `.refreshable()`
+- Use `LazyVStack`/`LazyHStack` for performance in ScrollViews
+- Apply proper loading states with `ProgressView()`
+- Handle empty states with meaningful messaging
+
+### Modals & Sheets
+- Use `.sheet()` for modal presentations
+- Use `.fullScreenCover()` for full screen modals
+- Implement `.presentationDetents()` for custom sheet heights
+- Use `.presentationDragIndicator()` for sheet dismissal indication
+- Apply `.interactiveDismissDisabled()` when necessary
+
+## UIKit Integration (When Needed)
+
+### When to Use UIKit
+- For features not yet available in SwiftUI
+- When fine-grained control over UIKit components is required
+- Use `UIViewRepresentable` or `UIViewControllerRepresentable` for bridging
+
+### Appearance Customization
+- Configure appearance using `UIAppearance` API in `onAppear` of root view or App init
+- Use `UINavigationBarAppearance`, `UITabBarAppearance`, `UIToolbarAppearance`
+- Apply blur effects with `UIBlurEffect` and `UIVisualEffectView`
+
+## Code Style
+
+### Naming Conventions
+- Use descriptive, Swift-style names: `camelCase` for variables/functions, `PascalCase` for types
+- Name views with `View` suffix: `WalletView`, `TransactionDetailView`
+- Name view models with `ViewModel` or `Manager`: `PocketsManager`
+
+### File Organization
+- One view per file
+- Group related views in folders (Components, Models, Views, etc.)
+- Use extensions for view modifiers and helper functions
+
+### Comments & Documentation
+- Add comments for complex logic only
+- Use `// MARK: -` to organize code sections
+- Document public APIs with triple-slash comments `///`
+
+## Specific to This Project
+
+### Tab Bar
+- Maintain liquid glass effect on tab bar as implemented
+- Use SF Symbols with filled variants for selected state
+- Keep consistent color scheme (system blue for tint)
+
+### Navigation
+- Maintain current tab-based structure
+- Use NavigationStack within each tab for hierarchical navigation
+- Preserve environment objects across navigation
+
+### Visual Theme
+- Dark mode optimized with liquid glass effects
+- Use blur materials for overlays and cards
+- Maintain translucent backgrounds where appropriate
+- Apply consistent corner radii and spacing
+
+## Anti-Patterns to Avoid
+- ❌ Never use custom tab bars when native TabView suffices
+- ❌ Avoid hardcoded colors; use semantic color system
+- ❌ Don't ignore safe areas unless intentionally designing full-bleed content
+- ❌ Never use pixel values; use points and native spacing
+- ❌ Avoid excessive shadows; prefer iOS-native elevation through materials
+- ❌ Don't create custom navigation when native components work
+- ❌ Never break iOS gestures (back swipe, sheet dismissal, etc.)
+- ❌ Avoid fixed sizes; use flexible layouts with GeometryReader sparingly
+
+## Testing & Preview
+- Always provide SwiftUI previews with `#Preview`
+- Test in both light and dark mode
+- Preview different Dynamic Type sizes
+- Test on different device sizes (iPhone SE, standard, Pro Max, iPad)
+
+## Resources Reference
+- Apple Human Interface Guidelines: https://developer.apple.com/design/human-interface-guidelines/
+- SF Symbols App: Use for browsing all available system icons
+- SwiftUI Documentation: https://developer.apple.com/documentation/swiftui/

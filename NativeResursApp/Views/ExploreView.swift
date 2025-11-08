@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct ExploreView: View {
+    @State private var navigationPath = NavigationPath()
+    
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             StickyHeaderView(title: "Explore", subtitle: "Discover more", trailingButton: "person.circle.fill") {
                 VStack(spacing: 16) {
                     // Featured Section
@@ -151,9 +153,16 @@ struct ExploreView: View {
                 }
             }
             .navigationBarHidden(true)
-        }
+            .onReceive(NotificationCenter.default.publisher(for: .scrollToTop)) { _ in
+                // If not at root level, pop to root
+                if !navigationPath.isEmpty {
+                    navigationPath.removeLast(navigationPath.count)
+                }
+                // If at root, the StickyHeaderView will handle scrolling to top
+            }
         }
     }
+}
 
 struct FeaturedCard: View {
     let title: String

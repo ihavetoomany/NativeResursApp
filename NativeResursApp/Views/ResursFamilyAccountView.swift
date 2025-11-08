@@ -10,28 +10,30 @@ import Combine
 
 struct ResursFamilyAccountView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var pocketsManager: PocketsManager
+    @EnvironmentObject var paymentPlansManager: PaymentPlansManager
     @StateObject private var scrollObserver = ScrollOffsetObserver()
-    @State private var showPocketOptions = false
+    @State private var showPaymentPlanOptions = false
     
     var body: some View {
         let scrollProgress = min(scrollObserver.offset / 100, 1.0)
         
         ZStack(alignment: .top) {
             // Scrollable Content
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 0) {
-                    // Tracking element
-                    GeometryReader { geometry in
-                        Color.clear
-                            .onChange(of: geometry.frame(in: .named("scroll")).minY) { oldValue, newValue in
-                                scrollObserver.offset = max(0, -newValue)
-                            }
-                    }
-                    .frame(height: 0)
-                    
-                    // Account for header height
-                    Color.clear.frame(height: 80)
+            ScrollViewReader { proxy in
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 0) {
+                        // Tracking element
+                        GeometryReader { geometry in
+                            Color.clear
+                                .onChange(of: geometry.frame(in: .named("scroll")).minY) { oldValue, newValue in
+                                    scrollObserver.offset = max(0, -newValue)
+                                }
+                        }
+                        .frame(height: 0)
+                        .id("scrollTop") // ID for scroll to top
+                        
+                        // Account for header height
+                        Color.clear.frame(height: 80)
                     
                     VStack(spacing: 16) {
                     // Account Overview Card
@@ -76,15 +78,15 @@ struct ResursFamilyAccountView: View {
                     }
                     .padding(.bottom, 16)
                     
-                    // Pockets Section
+                    // Payment Plans Section
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
-                            Text("Active Pockets")
+                            Text("Active Payment Plans")
                                 .font(.title2)
                                 .fontWeight(.semibold)
                             Spacer()
                             Button(action: {
-                                showPocketOptions = true
+                                showPaymentPlanOptions = true
                             }) {
                                 Image(systemName: "ellipsis.circle.fill")
                                     .font(.title2)
@@ -94,23 +96,30 @@ struct ResursFamilyAccountView: View {
                         .padding(.horizontal)
                         
                         VStack(spacing: 12) {
-                            ForEach(pocketsManager.pockets) { pocket in
-                                PocketCard(
-                                    title: pocket.name,
-                                    totalAmount: pocket.totalAmount,
-                                    paidAmount: pocket.paidAmount,
-                                    progress: pocket.progress,
-                                    dueDate: pocket.dueDate,
-                                    monthlyAmount: pocket.monthlyAmount,
-                                    icon: pocket.icon,
-                                    color: pocket.color
+                            ForEach(paymentPlansManager.paymentPlans) { paymentPlan in
+                                PaymentPlanCard(
+                                    title: paymentPlan.name,
+                                    totalAmount: paymentPlan.totalAmount,
+                                    paidAmount: paymentPlan.paidAmount,
+                                    progress: paymentPlan.progress,
+                                    dueDate: paymentPlan.dueDate,
+                                    monthlyAmount: paymentPlan.monthlyAmount,
+                                    icon: paymentPlan.icon,
+                                    color: paymentPlan.color
                                 )
                             }
                         }
                         .padding(.horizontal)
                     }
                 }
-                .padding(.vertical, 20)
+                .padding(.top, 20)
+                .padding(.bottom, 120) // Add bottom padding to clear custom tab bar
+                }
+                }
+                .onReceive(NotificationCenter.default.publisher(for: .scrollToTop)) { _ in
+                    withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                        proxy.scrollTo("scrollTop", anchor: .top)
+                    }
                 }
             }
             .coordinateSpace(name: "scroll")
@@ -168,28 +177,28 @@ struct ResursFamilyAccountView: View {
             .animation(.easeInOut(duration: 0.2), value: scrollProgress)
         }
         .navigationBarHidden(true)
-        .sheet(isPresented: $showPocketOptions) {
-            PocketOptionsSheet()
+        .sheet(isPresented: $showPaymentPlanOptions) {
+            PaymentPlanOptionsSheet()
                 .presentationDetents([.height(220)])
                 .presentationDragIndicator(.visible)
         }
     }
 }
 
-struct PocketOptionsSheet: View {
+struct PaymentPlanOptionsSheet: View {
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
         VStack(spacing: 0) {
             Button(action: {
                 dismiss()
-                // Action to create new pocket
+                // Action to create new payment plan
             }) {
                 HStack {
                     Image(systemName: "plus.circle.fill")
                         .font(.title3)
                         .foregroundColor(.blue)
-                    Text("Create New Pocket")
+                    Text("Create New Payment Plan")
                         .font(.headline)
                         .foregroundColor(.primary)
                     Spacer()
@@ -202,13 +211,13 @@ struct PocketOptionsSheet: View {
             
             Button(action: {
                 dismiss()
-                // Action to view pocket history
+                // Action to view payment plan history
             }) {
                 HStack {
                     Image(systemName: "clock.fill")
                         .font(.title3)
                         .foregroundColor(.blue)
-                    Text("Pocket History")
+                    Text("Payment Plan History")
                         .font(.headline)
                         .foregroundColor(.primary)
                     Spacer()
@@ -259,7 +268,7 @@ struct AccountOverviewCard: View {
                     .frame(height: 30)
                 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("In Pockets")
+                    Text("In Payment Plans")
                         .font(.caption)
                         .foregroundColor(.secondary)
                     Text("15 050 SEK")
@@ -317,7 +326,7 @@ struct CreditCardMini: View {
     }
 }
 
-struct PocketCard: View {
+struct PaymentPlanCard: View {
     let title: String
     let totalAmount: String
     let paidAmount: String
@@ -393,7 +402,7 @@ struct PocketCard: View {
 
 #Preview {
     ResursFamilyAccountView()
-        .environmentObject(PocketsManager())
+        .environmentObject(PaymentPlansManager())
         .preferredColorScheme(.dark)
 }
 

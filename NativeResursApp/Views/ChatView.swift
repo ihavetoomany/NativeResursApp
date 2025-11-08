@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct ChatView: View {
+    @State private var navigationPath = NavigationPath()
+    
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             StickyHeaderView(title: "Chat", subtitle: "Get help anytime", trailingButton: "person.circle.fill") {
                 VStack(spacing: 16) {
                     // Quick Help Options
@@ -149,9 +151,16 @@ struct ChatView: View {
                 }
             }
             .navigationBarHidden(true)
-        }
+            .onReceive(NotificationCenter.default.publisher(for: .scrollToTop)) { _ in
+                // If not at root level, pop to root
+                if !navigationPath.isEmpty {
+                    navigationPath.removeLast(navigationPath.count)
+                }
+                // If at root, the StickyHeaderView will handle scrolling to top
+            }
         }
     }
+}
 
 struct HelpOptionCard: View {
     let title: String

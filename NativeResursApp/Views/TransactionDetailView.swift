@@ -10,10 +10,10 @@ import Combine
 
 struct TransactionDetailView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var pocketsManager: PocketsManager
+    @EnvironmentObject var paymentPlansManager: PaymentPlansManager
     @StateObject private var scrollObserver = ScrollOffsetObserver()
     @State private var showNewPlanSheet = false
-    @State private var selectedPocket: String? = nil
+    @State private var selectedPaymentPlan: String? = nil
     
     let merchant: String
     let amount: String
@@ -26,19 +26,21 @@ struct TransactionDetailView: View {
         GeometryReader { geometry in
             ZStack(alignment: .top) {
                 // Scrollable Content
-                ScrollView(.vertical, showsIndicators: false) {
-                    VStack(spacing: 0) {
-                        // Tracking element
-                        GeometryReader { geo in
-                            Color.clear
-                                .onChange(of: geo.frame(in: .named("scroll")).minY) { oldValue, newValue in
-                                    scrollObserver.offset = max(0, -newValue)
-                                }
-                        }
-                        .frame(height: 0)
-                        
-                        // Account for header height
-                        Color.clear.frame(height: 80)
+                ScrollViewReader { proxy in
+                    ScrollView(.vertical, showsIndicators: false) {
+                        VStack(spacing: 0) {
+                            // Tracking element
+                            GeometryReader { geo in
+                                Color.clear
+                                    .onChange(of: geo.frame(in: .named("scroll")).minY) { oldValue, newValue in
+                                        scrollObserver.offset = max(0, -newValue)
+                                    }
+                            }
+                            .frame(height: 0)
+                            .id("scrollTop") // ID for scroll to top
+                            
+                            // Account for header height
+                            Color.clear.frame(height: 80)
                         
                         VStack(spacing: 16) {
                             // Transaction Details Card
@@ -52,37 +54,37 @@ struct TransactionDetailView: View {
                             .padding(.top, 36)
                             .frame(width: geometry.size.width)
                         
-                        // Pockets Explanation Section
-                        PocketsExplanationCard()
+                        // Payment Plans Explanation Section
+                        PaymentPlansExplanationCard()
                             .padding(.horizontal)
                             .frame(width: geometry.size.width)
                         
-                        // Add to Pocket Section
+                        // Add to Payment Plan Section
                         VStack(alignment: .leading, spacing: 12) {
-                            Text(selectedPocket == nil ? "Add to Pocket" : "Added to Pocket")
+                            Text(selectedPaymentPlan == nil ? "Add to Payment Plan" : "Added to Payment Plan")
                                 .font(.title2)
                                 .fontWeight(.semibold)
                                 .padding(.horizontal)
                                 .padding(.top, 16)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             
-                            if let pocket = selectedPocket {
-                                // Selected Pocket State
+                            if let paymentPlan = selectedPaymentPlan {
+                                // Selected Payment Plan State
                                 VStack(spacing: 16) {
-                                    SelectedPocketCard(
-                                        title: pocket,
+                                    SelectedPaymentPlanCard(
+                                        title: paymentPlan,
                                         amount: amount,
-                                        icon: pocketsManager.pockets.first(where: { $0.name == pocket })?.icon ?? "tray.fill",
-                                        color: pocketsManager.pockets.first(where: { $0.name == pocket })?.color ?? .blue,
-                                        isNewPocket: pocketsManager.pockets.first(where: { $0.name == pocket })?.dueDate == "Just created"
+                                        icon: paymentPlansManager.paymentPlans.first(where: { $0.name == paymentPlan })?.icon ?? "tray.fill",
+                                        color: paymentPlansManager.paymentPlans.first(where: { $0.name == paymentPlan })?.color ?? .blue,
+                                        isNewPaymentPlan: paymentPlansManager.paymentPlans.first(where: { $0.name == paymentPlan })?.dueDate == "Just created"
                                     )
                                     
                                     Button(action: {
                                         withAnimation {
-                                            selectedPocket = nil
+                                            selectedPaymentPlan = nil
                                         }
                                     }) {
-                                        Text("Remove from Pocket")
+                                        Text("Remove from Payment Plan")
                                             .font(.headline)
                                             .foregroundColor(.red)
                                             .frame(maxWidth: .infinity)
@@ -94,27 +96,27 @@ struct TransactionDetailView: View {
                                 }
                                 .padding(.horizontal)
                             } else {
-                                // Default State - Select Pocket
+                                // Default State - Select Payment Plan
                                 VStack(spacing: 12) {
-                                    // Existing Pockets (excluding paid off and unbilled)
-                                    ForEach(pocketsManager.pockets.filter { 
-                                        $0.progress < 1.0 && $0.name != "Unbilled Purchases" 
-                                    }) { pocket in
+                                    // Existing Payment Plans (excluding paid off)
+                                    ForEach(paymentPlansManager.paymentPlans.filter { 
+                                        $0.progress < 1.0
+                                    }) { paymentPlan in
                                         Button(action: {
                                             withAnimation {
-                                                selectedPocket = pocket.name
+                                                selectedPaymentPlan = paymentPlan.name
                                             }
                                         }) {
-                                            ExistingPocketRow(
-                                                title: pocket.name,
-                                                amount: pocket.totalAmount,
-                                                icon: pocket.icon,
-                                                color: pocket.color
+                                            ExistingPaymentPlanRow(
+                                                title: paymentPlan.name,
+                                                amount: paymentPlan.totalAmount,
+                                                icon: paymentPlan.icon,
+                                                color: paymentPlan.color
                                             )
                                         }
                                     }
                                     
-                                    // Create New Pocket Button
+                                    // Create New Payment Plan Button
                                     Button(action: {
                                         showNewPlanSheet = true
                                     }) {
@@ -125,11 +127,11 @@ struct TransactionDetailView: View {
                                                 .frame(width: 36, height: 36)
                                             
                                             VStack(alignment: .leading, spacing: 4) {
-                                                Text("Create New Pocket")
+                                                Text("Create New Payment Plan")
                                                     .font(.subheadline)
                                                     .fontWeight(.medium)
                                                     .foregroundColor(.primary)
-                                                Text("Start a new payment pocket")
+                                                Text("Start a new payment plan")
                                                     .font(.caption)
                                                     .foregroundColor(.secondary)
                                             }
@@ -151,12 +153,19 @@ struct TransactionDetailView: View {
                         .padding(.bottom, 16)
                         .frame(width: geometry.size.width)
                     }
-                    .padding(.vertical, 20)
+                    .padding(.top, 20)
+                    .padding(.bottom, 120) // Add bottom padding to clear custom tab bar
                     .frame(width: geometry.size.width)
                 }
                 .frame(width: geometry.size.width)
-            }
-            .coordinateSpace(name: "scroll")
+                    }
+                    .onReceive(NotificationCenter.default.publisher(for: .scrollToTop)) { _ in
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                            proxy.scrollTo("scrollTop", anchor: .top)
+                        }
+                    }
+                }
+                .coordinateSpace(name: "scroll")
             
                 // Sticky Header (overlays the content)
                 VStack(spacing: 0) {
@@ -214,13 +223,13 @@ struct TransactionDetailView: View {
         }
         .navigationBarHidden(true)
         .sheet(isPresented: $showNewPlanSheet) {
-            NewPocketSheet(
+            NewPaymentPlanSheet(
                 transactionAmount: amount,
                 merchant: merchant,
-                onPocketCreated: { pocketName in
-                    pocketsManager.addPocket(name: pocketName, startingAmount: amount)
+                onPaymentPlanCreated: { paymentPlanName in
+                    paymentPlansManager.addPaymentPlan(name: paymentPlanName, startingAmount: amount)
                     withAnimation {
-                        selectedPocket = pocketName
+                        selectedPaymentPlan = paymentPlanName
                     }
                 }
             )
@@ -286,7 +295,7 @@ struct DetailRow: View {
     }
 }
 
-struct PocketsExplanationCard: View {
+struct PaymentPlansExplanationCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
@@ -294,12 +303,12 @@ struct PocketsExplanationCard: View {
                     .font(.title3)
                     .foregroundColor(.blue)
                 
-                Text("About Pockets")
+                Text("About Payment Plans")
                     .font(.headline)
                     .fontWeight(.semibold)
             }
             
-            Text("Break out this purchase from your monthly bill and put it in a pocket billed separately - always with the opportunity to part pay or pay in full when the invoice arrives.")
+            Text("Break out this purchase from your monthly bill and put it in a payment plan billed separately - always with the opportunity to part pay or pay in full when the invoice arrives.")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .lineSpacing(4)
@@ -312,7 +321,7 @@ struct PocketsExplanationCard: View {
     }
 }
 
-struct ExistingPocketRow: View {
+struct ExistingPaymentPlanRow: View {
     let title: String
     let amount: String
     let icon: String
@@ -349,12 +358,12 @@ struct ExistingPocketRow: View {
     }
 }
 
-struct SelectedPocketCard: View {
+struct SelectedPaymentPlanCard: View {
     let title: String
     let amount: String
     let icon: String
     let color: Color
-    let isNewPocket: Bool
+    let isNewPaymentPlan: Bool
     
     var body: some View {
         VStack(spacing: 16) {
@@ -364,10 +373,10 @@ struct SelectedPocketCard: View {
                     .foregroundColor(.green)
                 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(isNewPocket ? "Pocket Created" : "Purchase Added")
+                    Text(isNewPaymentPlan ? "Payment Plan Created" : "Purchase Added")
                         .font(.headline)
                         .fontWeight(.semibold)
-                    Text(isNewPocket ? "Your new pocket is ready" : "This purchase is now in your pocket")
+                    Text(isNewPaymentPlan ? "Your new payment plan is ready" : "This purchase is now in your payment plan")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -388,7 +397,7 @@ struct SelectedPocketCard: View {
                     Text(title)
                         .font(.subheadline)
                         .fontWeight(.medium)
-                    Text(isNewPocket ? "Starting amount: \(amount)" : "New total: \(amount)")
+                    Text(isNewPaymentPlan ? "Starting amount: \(amount)" : "New total: \(amount)")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -403,33 +412,33 @@ struct SelectedPocketCard: View {
     }
 }
 
-struct NewPocketSheet: View {
+struct NewPaymentPlanSheet: View {
     @Environment(\.dismiss) var dismiss
     let transactionAmount: String
     let merchant: String
-    let onPocketCreated: (String) -> Void
-    @State private var pocketName: String = ""
+    let onPaymentPlanCreated: (String) -> Void
+    @State private var paymentPlanName: String = ""
     
     var body: some View {
         NavigationView {
             VStack(spacing: 24) {
                 VStack(spacing: 12) {
-                    Text("Create New Pocket")
+                    Text("Create New Payment Plan")
                         .font(.title2)
                         .fontWeight(.bold)
                     
-                    Text("This purchase will be added to the new pocket")
+                    Text("This purchase will be added to the new payment plan")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
                 .padding(.top, 20)
                 
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Pocket Name")
+                    Text("Payment Plan Name")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                     
-                    TextField("e.g., Home Renovation", text: $pocketName)
+                    TextField("e.g., Home Renovation", text: $paymentPlanName)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(12)
                         .background(.ultraThinMaterial)
@@ -460,20 +469,20 @@ struct NewPocketSheet: View {
                 Spacer()
                 
                 Button(action: {
-                    if !pocketName.isEmpty {
-                        onPocketCreated(pocketName)
+                    if !paymentPlanName.isEmpty {
+                        onPaymentPlanCreated(paymentPlanName)
                         dismiss()
                     }
                 }) {
-                    Text("Create Pocket")
+                    Text("Create Payment Plan")
                         .font(.headline)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(pocketName.isEmpty ? Color.gray : Color.blue)
+                        .background(paymentPlanName.isEmpty ? Color.gray : Color.blue)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
-                .disabled(pocketName.isEmpty)
+                .disabled(paymentPlanName.isEmpty)
                 .padding(.horizontal)
                 .padding(.bottom, 20)
             }
@@ -489,7 +498,7 @@ struct NewPocketSheet: View {
         date: "Nov 2, 2025",
         time: "5:15 PM"
     )
-    .environmentObject(PocketsManager())
+    .environmentObject(PaymentPlansManager())
     .preferredColorScheme(.dark)
 }
 

@@ -1,5 +1,5 @@
 //
-//  PocketsManager.swift
+//  PaymentPlansManager.swift
 //  NativeResursApp
 //
 //  Created by Bjarne Werner on 2025-11-03.
@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-struct Pocket: Identifiable {
+struct PaymentPlan: Identifiable {
     let id = UUID()
     let name: String
     let totalAmount: String
@@ -20,19 +20,9 @@ struct Pocket: Identifiable {
     let color: Color
 }
 
-class PocketsManager: ObservableObject {
-    @Published var pockets: [Pocket] = [
-        Pocket(
-            name: "Unbilled Purchases",
-            totalAmount: "56 005 SEK",
-            paidAmount: "8 945 SEK",
-            progress: 0.16,
-            dueDate: "Current billing period",
-            monthlyAmount: nil,
-            icon: "creditcard.fill",
-            color: .blue
-        ),
-        Pocket(
+class PaymentPlansManager: ObservableObject {
+    @Published var paymentPlans: [PaymentPlan] = [
+        PaymentPlan(
             name: "Home Office Setup",
             totalAmount: "18 200 SEK",
             paidAmount: "6 000 SEK",
@@ -42,7 +32,7 @@ class PocketsManager: ObservableObject {
             icon: "doc.text.fill",
             color: .purple
         ),
-        Pocket(
+        PaymentPlan(
             name: "New Kitchen Appliances",
             totalAmount: "28 500 SEK",
             paidAmount: "25 650 SEK",
@@ -54,8 +44,8 @@ class PocketsManager: ObservableObject {
         )
     ]
     
-    func addPocket(name: String, startingAmount: String) {
-        let newPocket = Pocket(
+    func addPaymentPlan(name: String, startingAmount: String) {
+        let newPaymentPlan = PaymentPlan(
             name: name,
             totalAmount: startingAmount,
             paidAmount: "0 SEK",
@@ -65,7 +55,7 @@ class PocketsManager: ObservableObject {
             icon: "tray.fill",
             color: .blue
         )
-        pockets.insert(newPocket, at: pockets.count - 1) // Insert before the last (paid off) pocket
+        paymentPlans.insert(newPaymentPlan, at: 0) // Insert at the beginning
     }
 }
 

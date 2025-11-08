@@ -7,8 +7,16 @@
 
 import SwiftUI
 
+struct TransactionData: Hashable {
+    let merchant: String
+    let amount: String
+    let date: String
+    let time: String
+}
+
 struct WalletView: View {
     @State private var selectedTab = 0
+    @State private var navigationPath = NavigationPath()
     
     private var greeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
@@ -25,7 +33,7 @@ struct WalletView: View {
     }
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             StickyHeaderView(title: "John", subtitle: greeting, trailingButton: "person.circle.fill") {
                 // Sticky Pills Section
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -84,18 +92,34 @@ struct WalletView: View {
                         if selectedTab == 0 {
                             InvoicesList()
                         } else if selectedTab == 1 {
-                            PurchasesList()
+                            PurchasesList(navigationPath: $navigationPath)
                         } else {
                             ErrandsList()
                         }
                     }
                 }
             .navigationBarHidden(true)
+            .navigationDestination(for: TransactionData.self) { transaction in
+                TransactionDetailView(
+                    merchant: transaction.merchant,
+                    amount: transaction.amount,
+                    date: transaction.date,
+                    time: transaction.time
+                )
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .scrollToTop)) { _ in
+                // If not at root level, pop to root
+                if !navigationPath.isEmpty {
+                    navigationPath.removeLast(navigationPath.count)
+                }
+                // If at root, the StickyHeaderView will handle scrolling to top
+            }
         }
     }
 }
 
 struct PurchasesList: View {
+    @Binding var navigationPath: NavigationPath
     @State private var showCreditDetails = false
     
     var body: some View {
@@ -112,19 +136,21 @@ struct PurchasesList: View {
                 color: .brown
             )
             
-            NavigationLink(destination: TransactionDetailView(
-                merchant: "IKEA",
-                amount: "23 000 SEK",
-                date: "Nov 2, 2025",
-                time: "5:15 PM"
-            )) {
-            PurchaseRow(
+            Button {
+                navigationPath.append(TransactionData(
+                    merchant: "IKEA",
+                    amount: "23 000 SEK",
+                    date: "Nov 2, 2025",
+                    time: "5:15 PM"
+                ))
+            } label: {
+                PurchaseRow(
                     title: "IKEA",
-                subtitle: "Yesterday, 5:15 PM",
+                    subtitle: "Yesterday, 5:15 PM",
                     amount: "23 000 SEK",
                     icon: "heart.fill",
                     color: .blue
-            )
+                )
             }
             .buttonStyle(PlainButtonStyle())
             
