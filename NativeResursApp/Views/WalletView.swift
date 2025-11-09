@@ -305,23 +305,49 @@ struct InvoicesList: View {
                 .padding(.vertical, 8)
             
             // Overdue invoices at the top
-            InvoiceRow(
-                title: "Bauhaus",
-                subtitle: "Overdue by 2 days",
-                amount: "2 457 SEK",
-                icon: "doc.text.fill",
-                color: .orange,
-                isOverdue: true
-            )
+            Button {
+                navigationPath.append(InvoiceData(
+                    merchant: "Bauhaus",
+                    amount: "2 457 SEK",
+                    dueDate: "Nov 7, 2025",
+                    invoiceNumber: "INV-2025-10-048",
+                    issueDate: "Oct 23, 2025",
+                    status: "Overdue by 2 days",
+                    color: .orange
+                ))
+            } label: {
+                InvoiceRow(
+                    title: "Bauhaus",
+                    subtitle: "Overdue by 2 days",
+                    amount: "2 457 SEK",
+                    icon: "doc.text.fill",
+                    color: .orange,
+                    isOverdue: true
+                )
+            }
+            .buttonStyle(PlainButtonStyle())
             
-            InvoiceRow(
-                title: "Gekås",
-                subtitle: "Overdue by 1 day",
-                amount: "895 SEK",
-                icon: "doc.text.fill",
-                color: .orange,
-                isOverdue: true
-            )
+            Button {
+                navigationPath.append(InvoiceData(
+                    merchant: "Gekås",
+                    amount: "895 SEK",
+                    dueDate: "Nov 8, 2025",
+                    invoiceNumber: "INV-2025-10-052",
+                    issueDate: "Oct 25, 2025",
+                    status: "Overdue by 1 day",
+                    color: .orange
+                ))
+            } label: {
+                InvoiceRow(
+                    title: "Gekås",
+                    subtitle: "Overdue by 1 day",
+                    amount: "895 SEK",
+                    icon: "doc.text.fill",
+                    color: .orange,
+                    isOverdue: true
+                )
+            }
+            .buttonStyle(PlainButtonStyle())
             
             // Due within 4 days (yellow) - Tappable
             Button {
@@ -346,52 +372,118 @@ struct InvoicesList: View {
             }
             .buttonStyle(PlainButtonStyle())
             
-            // Regular due dates (cyan)
-            InvoiceRow(
-                title: "Elgiganten",
-                subtitle: "Due in 1 week",
-                amount: "900 SEK",
-                icon: "doc.text.fill",
-                color: .yellow,
-                isOverdue: false
-            )
+            // Regular due dates
+            Button {
+                navigationPath.append(InvoiceData(
+                    merchant: "Elgiganten",
+                    amount: "900 SEK",
+                    dueDate: "Nov 16, 2025",
+                    invoiceNumber: "INV-2025-11-003",
+                    issueDate: "Nov 2, 2025",
+                    status: "Due in 1 week",
+                    color: .yellow
+                ))
+            } label: {
+                InvoiceRow(
+                    title: "Elgiganten",
+                    subtitle: "Due in 1 week",
+                    amount: "900 SEK",
+                    icon: "doc.text.fill",
+                    color: .yellow,
+                    isOverdue: false
+                )
+            }
+            .buttonStyle(PlainButtonStyle())
             
             // Scheduled invoices
-            InvoiceRow(
-                title: "Clas Ohlson",
-                subtitle: "Scheduled for Nov 15",
-                amount: "785 SEK",
-                icon: "doc.text.fill",
-                color: .cyan,
-                isOverdue: false
-            )
+            Button {
+                navigationPath.append(InvoiceData(
+                    merchant: "Clas Ohlson",
+                    amount: "785 SEK",
+                    dueDate: "Nov 15, 2025",
+                    invoiceNumber: "INV-2025-11-002",
+                    issueDate: "Nov 1, 2025",
+                    status: "Scheduled for Nov 15",
+                    color: .cyan
+                ))
+            } label: {
+                InvoiceRow(
+                    title: "Clas Ohlson",
+                    subtitle: "Scheduled for Nov 15",
+                    amount: "785 SEK",
+                    icon: "doc.text.fill",
+                    color: .cyan,
+                    isOverdue: false
+                )
+            }
+            .buttonStyle(PlainButtonStyle())
             
-            InvoiceRow(
-                title: "Stadium",
-                subtitle: "Paid on Nov 8",
-                amount: "2 340 SEK",
-                icon: "doc.text.fill",
-                color: .green,
-                isOverdue: false
-            )
+            // Paid invoices
+            Button {
+                navigationPath.append(InvoiceData(
+                    merchant: "Stadium",
+                    amount: "2 340 SEK",
+                    dueDate: "Nov 8, 2025",
+                    invoiceNumber: "INV-2025-10-058",
+                    issueDate: "Oct 25, 2025",
+                    status: "Paid on Nov 8",
+                    color: .green
+                ))
+            } label: {
+                InvoiceRow(
+                    title: "Stadium",
+                    subtitle: "Paid on Nov 8",
+                    amount: "2 340 SEK",
+                    icon: "doc.text.fill",
+                    color: .green,
+                    isOverdue: false
+                )
+            }
+            .buttonStyle(PlainButtonStyle())
             
-            InvoiceRow(
-                title: "ICA",
-                subtitle: "Paid on Nov 3",
-                amount: "452 SEK",
-                icon: "doc.text.fill",
-                color: .green,
-                isOverdue: false
-            )
+            Button {
+                navigationPath.append(InvoiceData(
+                    merchant: "ICA",
+                    amount: "452 SEK",
+                    dueDate: "Nov 3, 2025",
+                    invoiceNumber: "INV-2025-10-045",
+                    issueDate: "Oct 20, 2025",
+                    status: "Paid on Nov 3",
+                    color: .green
+                ))
+            } label: {
+                InvoiceRow(
+                    title: "ICA",
+                    subtitle: "Paid on Nov 3",
+                    amount: "452 SEK",
+                    icon: "doc.text.fill",
+                    color: .green,
+                    isOverdue: false
+                )
+            }
+            .buttonStyle(PlainButtonStyle())
             
-            InvoiceRow(
-                title: "Åhléns",
-                subtitle: "Paid on Oct 28",
-                amount: "300 SEK",
-                icon: "doc.text.fill",
-                color: .green,
-                isOverdue: false
-            )
+            Button {
+                navigationPath.append(InvoiceData(
+                    merchant: "Åhléns",
+                    amount: "300 SEK",
+                    dueDate: "Oct 28, 2025",
+                    invoiceNumber: "INV-2025-10-038",
+                    issueDate: "Oct 14, 2025",
+                    status: "Paid on Oct 28",
+                    color: .green
+                ))
+            } label: {
+                InvoiceRow(
+                    title: "Åhléns",
+                    subtitle: "Paid on Oct 28",
+                    amount: "300 SEK",
+                    icon: "doc.text.fill",
+                    color: .green,
+                    isOverdue: false
+                )
+            }
+            .buttonStyle(PlainButtonStyle())
         }
         .padding(.horizontal)
     }

@@ -27,6 +27,18 @@ struct InvoiceDetailView: View {
     
     let invoice: InvoiceData
     
+    private var isInvoicePaid: Bool {
+        invoice.status.contains("Paid on")
+    }
+    
+    private var isInvoiceScheduled: Bool {
+        invoice.status.contains("Scheduled")
+    }
+    
+    private var shouldShowPayButton: Bool {
+        !isInvoicePaid && !isPaid && !isInvoiceScheduled
+    }
+    
     var body: some View {
         let scrollProgress = min(scrollObserver.offset / 100, 1.0)
         
@@ -51,23 +63,25 @@ struct InvoiceDetailView: View {
                         
                         VStack(spacing: 16) {
                             // Invoice Details Card
-                            InvoiceDetailsCard(invoice: invoice, isPaid: isPaid)
+                            InvoiceDetailsCard(invoice: invoice, isPaid: isPaid || isInvoicePaid)
                                 .padding(.horizontal)
                                 .padding(.top, 36)
                                 .frame(width: geometry.size.width)
                         
                             // Payment Information Card
-                            PaymentInformationCard()
-                                .padding(.horizontal)
-                                .frame(width: geometry.size.width)
+                            if !isInvoicePaid {
+                                PaymentInformationCard(isScheduled: isInvoiceScheduled)
+                                    .padding(.horizontal)
+                                    .frame(width: geometry.size.width)
+                            }
                             
                             // Invoice Items
-                            InvoiceItemsCard()
+                            InvoiceItemsCard(merchant: invoice.merchant)
                                 .padding(.horizontal)
                                 .frame(width: geometry.size.width)
                             
                             // Payment Options
-                            if !isPaid {
+                            if shouldShowPayButton {
                                 PaymentOptionsCard()
                                     .padding(.horizontal)
                                     .frame(width: geometry.size.width)
@@ -139,7 +153,7 @@ struct InvoiceDetailView: View {
                 .frame(width: geometry.size.width)
                 
                 // Floating Pay Button
-                if !isPaid {
+                if shouldShowPayButton {
                     VStack(spacing: 0) {
                         Spacer()
                         
@@ -246,55 +260,147 @@ struct InvoiceDetailsCard: View {
 }
 
 struct PaymentInformationCard: View {
+    let isScheduled: Bool
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Image(systemName: "info.circle.fill")
+                Image(systemName: isScheduled ? "calendar.circle.fill" : "info.circle.fill")
                     .font(.title3)
-                    .foregroundColor(.blue)
+                    .foregroundColor(isScheduled ? .cyan : .blue)
                 
-                Text("Payment Information")
+                Text(isScheduled ? "Scheduled Payment" : "Payment Information")
                     .font(.headline)
                     .fontWeight(.semibold)
             }
             
-            VStack(spacing: 8) {
-                HStack {
-                    Text("Payment Method")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    HStack(spacing: 6) {
-                        Image(systemName: "creditcard.fill")
-                            .font(.caption)
-                            .foregroundColor(.blue)
-                        Text("Resurs Gold")
+            if isScheduled {
+                VStack(spacing: 8) {
+                    HStack {
+                        Text("Status")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        Text("Auto-pay scheduled")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                    }
+                    
+                    Divider()
+                    
+                    HStack {
+                        Text("Payment Method")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        HStack(spacing: 6) {
+                            Image(systemName: "creditcard.fill")
+                                .font(.caption)
+                                .foregroundColor(.cyan)
+                            Text("Resurs Gold")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                        }
+                    }
+                }
+            } else {
+                VStack(spacing: 8) {
+                    HStack {
+                        Text("Payment Method")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        HStack(spacing: 6) {
+                            Image(systemName: "creditcard.fill")
+                                .font(.caption)
+                                .foregroundColor(.blue)
+                            Text("Resurs Gold")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                        }
+                    }
+                    
+                    Divider()
+                    
+                    HStack {
+                        Text("Payment Options")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        Text("Full or Part Payment")
                             .font(.subheadline)
                             .fontWeight(.medium)
                     }
                 }
-                
-                Divider()
-                
-                HStack {
-                    Text("Payment Options")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    Text("Full or Part Payment")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                }
             }
         }
         .padding(20)
-        .background(Color.blue.opacity(0.1))
+        .background((isScheduled ? Color.cyan : Color.blue).opacity(0.1))
         .background(.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }
 
 struct InvoiceItemsCard: View {
+    let merchant: String
+    
+    private var items: [(name: String, quantity: String, price: String, total: String)] {
+        switch merchant {
+        case "Netonnet":
+            return [
+                ("TV Wall Mount", "1", "399 SEK", "1 568 SEK"),
+                ("HDMI Cable 3m", "2", "298 SEK", "1 568 SEK"),
+                ("Power Strip", "1", "249 SEK", "1 568 SEK"),
+                ("Cable Management", "1", "179 SEK", "1 568 SEK"),
+                ("Universal Remote", "1", "443 SEK", "1 568 SEK")
+            ]
+        case "Bauhaus":
+            return [
+                ("Paint Roller Set", "2", "298 SEK", "2 457 SEK"),
+                ("Interior Paint 10L", "3", "1 347 SEK", "2 457 SEK"),
+                ("Painter's Tape", "4", "236 SEK", "2 457 SEK"),
+                ("Drop Cloth", "2", "238 SEK", "2 457 SEK"),
+                ("Paint Tray Kit", "1", "338 SEK", "2 457 SEK")
+            ]
+        case "Gekås":
+            return [
+                ("Winter Jacket", "1", "495 SEK", "895 SEK"),
+                ("Wool Socks 3-pack", "1", "149 SEK", "895 SEK"),
+                ("Thermal Underwear", "1", "251 SEK", "895 SEK")
+            ]
+        case "Elgiganten":
+            return [
+                ("Bluetooth Speaker", "1", "549 SEK", "900 SEK"),
+                ("Phone Case", "1", "199 SEK", "900 SEK"),
+                ("USB-C Cable 2m", "1", "152 SEK", "900 SEK")
+            ]
+        case "Clas Ohlson":
+            return [
+                ("LED Desk Lamp", "1", "349 SEK", "785 SEK"),
+                ("Batteries AA 20-pack", "1", "179 SEK", "785 SEK"),
+                ("Extension Cord 3m", "1", "257 SEK", "785 SEK")
+            ]
+        case "Stadium":
+            return [
+                ("Running Shoes", "1", "1 299 SEK", "2 340 SEK"),
+                ("Sports Bag", "1", "549 SEK", "2 340 SEK"),
+                ("Water Bottle", "2", "246 SEK", "2 340 SEK"),
+                ("Gym Towel", "1", "246 SEK", "2 340 SEK")
+            ]
+        case "ICA":
+            return [
+                ("Groceries", "1", "452 SEK", "452 SEK")
+            ]
+        case "Åhléns":
+            return [
+                ("Face Cream", "1", "189 SEK", "300 SEK"),
+                ("Hand Soap", "2", "111 SEK", "300 SEK")
+            ]
+        default:
+            return [("Item", "1", "0 SEK", "0 SEK")]
+        }
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Invoice Items")
@@ -302,35 +408,13 @@ struct InvoiceItemsCard: View {
                 .fontWeight(.semibold)
             
             VStack(spacing: 12) {
-                InvoiceItemRow(
-                    name: "TV Wall Mount",
-                    quantity: "1",
-                    price: "399 SEK"
-                )
-                
-                InvoiceItemRow(
-                    name: "HDMI Cable 3m",
-                    quantity: "2",
-                    price: "298 SEK"
-                )
-                
-                InvoiceItemRow(
-                    name: "Power Strip",
-                    quantity: "1",
-                    price: "249 SEK"
-                )
-                
-                InvoiceItemRow(
-                    name: "Cable Management",
-                    quantity: "1",
-                    price: "179 SEK"
-                )
-                
-                InvoiceItemRow(
-                    name: "Universal Remote",
-                    quantity: "1",
-                    price: "443 SEK"
-                )
+                ForEach(items.indices, id: \.self) { index in
+                    InvoiceItemRow(
+                        name: items[index].name,
+                        quantity: items[index].quantity,
+                        price: items[index].price
+                    )
+                }
                 
                 Divider()
                 
@@ -339,7 +423,7 @@ struct InvoiceItemsCard: View {
                         .font(.headline)
                         .fontWeight(.semibold)
                     Spacer()
-                    Text("1 568 SEK")
+                    Text(items.first?.total ?? "0 SEK")
                         .font(.headline)
                         .fontWeight(.bold)
                 }
