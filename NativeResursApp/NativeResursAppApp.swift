@@ -19,7 +19,6 @@ struct NativeResursAppApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .preferredColorScheme(.dark)
                 .task {
                     // Show about dialog only on first launch, after a short delay to let the UI settle
                     if !hasSeenAboutDialog {
@@ -44,8 +43,8 @@ struct NativeResursAppApp: App {
         appearance.configureWithTransparentBackground()
         appearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterial)
         
-        // Add subtle shadow for depth
-        appearance.shadowColor = UIColor.black.withAlphaComponent(0.1)
+        // Add subtle shadow for depth (adapts to light/dark mode)
+        appearance.shadowColor = UIColor.label.withAlphaComponent(0.1)
         
         // Configure selected item appearance
         let itemAppearance = UITabBarItemAppearance()

@@ -52,7 +52,7 @@ struct ContentView: View {
             }
             .tag(2)
             
-            // Chat Tab (lazy loaded)
+            // Support Tab (lazy loaded)
             Group {
                 if hasAppeared || selectedTab == 3 {
                     ChatView()
@@ -61,7 +61,7 @@ struct ContentView: View {
                 }
             }
             .tabItem {
-                Label("Chat", systemImage: selectedTab == 3 ? "message.fill" : "message")
+                Label("Support", systemImage: selectedTab == 3 ? "message.fill" : "message")
             }
             .tag(3)
         }
@@ -86,7 +86,12 @@ struct ContentView: View {
     }
 }
 
-#Preview {
+#Preview("Light Mode") {
+    ContentView()
+        .preferredColorScheme(.light)
+}
+
+#Preview("Dark Mode") {
     ContentView()
         .preferredColorScheme(.dark)
 }

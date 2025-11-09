@@ -12,7 +12,7 @@ struct ChatView: View {
     
     var body: some View {
         NavigationStack(path: $navigationPath) {
-            StickyHeaderView(title: "Chat", subtitle: "Get help anytime", trailingButton: "person.circle.fill") {
+            StickyHeaderView(title: "Support", subtitle: "Get help anytime", trailingButton: "person.circle.fill") {
                 VStack(spacing: 16) {
                     // Quick Help Options
                     VStack(alignment: .leading, spacing: 16) {

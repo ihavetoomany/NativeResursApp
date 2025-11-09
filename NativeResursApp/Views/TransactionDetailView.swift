@@ -215,7 +215,7 @@ struct TransactionDetailView: View {
                     .padding(.bottom, 16)
                 }
                 }
-                .background(Color.black.opacity(0.85))
+                .background(Color(uiColor: .systemBackground).opacity(0.95))
                 .background(.ultraThinMaterial)
                 .animation(.easeInOut(duration: 0.2), value: scrollProgress)
                 .frame(width: geometry.size.width)

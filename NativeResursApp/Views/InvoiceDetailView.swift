@@ -81,13 +81,20 @@ struct InvoiceDetailView: View {
                             
                             // Payment Options
                             if shouldShowPayButton {
-                                PaymentOptionsCard()
+                                PaymentOptionsCard(onPayInFull: {
+                                    showPaymentSheet = true
+                                }, onPartPayment: {
+                                    showPaymentSheet = true
+                                }, onSnooze: {
+                                    // Handle snooze action
+                                    // Could show a date picker sheet or similar
+                                })
                                     .padding(.horizontal)
                                     .frame(width: geometry.size.width)
                             }
                         }
                         .padding(.top, 20)
-                        .padding(.bottom, 120)
+                        .padding(.bottom, 40)
                         .frame(width: geometry.size.width)
                     }
                     .frame(width: geometry.size.width)
@@ -146,38 +153,10 @@ struct InvoiceDetailView: View {
                         .padding(.bottom, 16)
                     }
                 }
-                .background(Color.black.opacity(0.85))
+                .background(Color(uiColor: .systemBackground).opacity(0.95))
                 .background(.ultraThinMaterial)
                 .animation(.easeInOut(duration: 0.2), value: scrollProgress)
                 .frame(width: geometry.size.width)
-                
-                // Floating Pay Button
-                if shouldShowPayButton {
-                    VStack(spacing: 0) {
-                        Spacer()
-                        
-                        Button(action: {
-                            showPaymentSheet = true
-                        }) {
-                            HStack {
-                                Image(systemName: "creditcard.fill")
-                                    .font(.title3)
-                                Text("Pay Invoice")
-                                    .font(.headline)
-                                    .fontWeight(.semibold)
-                            }
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(Color.blue)
-                            .clipShape(Capsule())
-                            .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
-                        }
-                        .padding(.horizontal, 20)
-                        .padding(.bottom, 20)
-                    }
-                    .ignoresSafeArea(edges: .bottom)
-                }
             }
         }
         .navigationBarHidden(true)
@@ -455,6 +434,10 @@ struct InvoiceItemRow: View {
 }
 
 struct PaymentOptionsCard: View {
+    let onPayInFull: () -> Void
+    let onPartPayment: () -> Void
+    let onSnooze: () -> Void
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Payment Options")
@@ -466,21 +449,24 @@ struct PaymentOptionsCard: View {
                     icon: "checkmark.circle.fill",
                     title: "Pay in Full",
                     description: "Pay the entire amount now",
-                    color: .blue
+                    color: .blue,
+                    action: onPayInFull
                 )
                 
                 PaymentOptionRow(
                     icon: "calendar.circle.fill",
                     title: "Part Payment",
                     description: "Pay a portion now, rest later",
-                    color: .purple
+                    color: .purple,
+                    action: onPartPayment
                 )
                 
                 PaymentOptionRow(
                     icon: "clock.badge.checkmark.fill",
                     title: "Snooze",
                     description: "Postpone payment to a later date",
-                    color: .green
+                    color: .green,
+                    action: onSnooze
                 )
             }
         }
@@ -495,30 +481,59 @@ struct PaymentOptionRow: View {
     let title: String
     let description: String
     let color: Color
+    let action: () -> Void
+    
+    @State private var isPressed = false
     
     var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: icon)
-                .font(.title3)
-                .foregroundColor(color)
-                .frame(width: 36, height: 36)
-                .background(color.opacity(0.2))
-                .clipShape(Circle())
+        Button(action: {
+            // Haptic feedback
+            let impact = UIImpactFeedbackGenerator(style: .medium)
+            impact.impactOccurred()
             
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                Text(description)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                action()
             }
-            
-            Spacer()
+        }) {
+            HStack(spacing: 12) {
+                Image(systemName: icon)
+                    .font(.title3)
+                    .foregroundColor(color)
+                    .frame(width: 36, height: 36)
+                    .background(color.opacity(0.2))
+                    .clipShape(Circle())
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(title)
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundColor(.primary)
+                    Text(description)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                
+                Spacer()
+            }
+            .padding(16)
+            .background(isPressed ? color.opacity(0.15) : color.opacity(0.08))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .scaleEffect(isPressed ? 0.97 : 1.0)
         }
-        .padding(12)
-        .background(Color.gray.opacity(0.05))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .buttonStyle(PlainButtonStyle())
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 0)
+                .onChanged { _ in
+                    withAnimation(.easeOut(duration: 0.1)) {
+                        isPressed = true
+                    }
+                }
+                .onEnded { _ in
+                    withAnimation(.easeOut(duration: 0.2)) {
+                        isPressed = false
+                    }
+                }
+        )
     }
 }
 
