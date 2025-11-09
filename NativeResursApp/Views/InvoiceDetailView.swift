@@ -19,7 +19,6 @@ struct InvoiceData: Hashable {
 
 struct InvoiceDetailView: View {
     @Environment(\.dismiss) var dismiss
-    @Environment(\.hideTabBar) var hideTabBar
     @StateObject private var scrollObserver = ScrollOffsetObserver()
     @State private var showPaymentSheet = false
     @State private var isPaying = false
@@ -182,12 +181,7 @@ struct InvoiceDetailView: View {
             }
         }
         .navigationBarHidden(true)
-        .onAppear {
-            hideTabBar.wrappedValue = true
-        }
-        .onDisappear {
-            hideTabBar.wrappedValue = false
-        }
+        .toolbar(.hidden, for: .tabBar)
         .sheet(isPresented: $showPaymentSheet) {
             PaymentSheet(
                 invoice: invoice,
@@ -483,9 +477,9 @@ struct PaymentOptionsCard: View {
                 )
                 
                 PaymentOptionRow(
-                    icon: "arrow.triangle.2.circlepath.circle.fill",
-                    title: "Payment Plan",
-                    description: "Spread payments over time",
+                    icon: "clock.badge.checkmark.fill",
+                    title: "Snooze",
+                    description: "Postpone payment to a later date",
                     color: .green
                 )
             }

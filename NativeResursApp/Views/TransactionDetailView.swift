@@ -10,7 +10,6 @@ import Combine
 
 struct TransactionDetailView: View {
     @Environment(\.dismiss) var dismiss
-    @Environment(\.hideTabBar) var hideTabBar
     @EnvironmentObject var paymentPlansManager: PaymentPlansManager
     @StateObject private var scrollObserver = ScrollOffsetObserver()
     @State private var showNewPlanSheet = false
@@ -223,12 +222,7 @@ struct TransactionDetailView: View {
             }
         }
         .navigationBarHidden(true)
-        .onAppear {
-            hideTabBar.wrappedValue = true
-        }
-        .onDisappear {
-            hideTabBar.wrappedValue = false
-        }
+        .toolbar(.hidden, for: .tabBar)
         .sheet(isPresented: $showNewPlanSheet) {
             NewPaymentPlanSheet(
                 transactionAmount: amount,
