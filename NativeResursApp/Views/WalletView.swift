@@ -90,7 +90,7 @@ struct WalletView: View {
                     VStack(spacing: 16) {
                     // Content based on selected tab
                         if selectedTab == 0 {
-                            InvoicesList()
+                            InvoicesList(navigationPath: $navigationPath)
                         } else if selectedTab == 1 {
                             PurchasesList(navigationPath: $navigationPath)
                         } else {
@@ -106,6 +106,9 @@ struct WalletView: View {
                     date: transaction.date,
                     time: transaction.time
                 )
+            }
+            .navigationDestination(for: InvoiceData.self) { invoice in
+                InvoiceDetailView(invoice: invoice)
             }
             .onReceive(NotificationCenter.default.publisher(for: .scrollToTop)) { _ in
                 // If not at root level, pop to root
@@ -293,6 +296,8 @@ struct ErrandRow: View {
 }
 
 struct InvoicesList: View {
+    @Binding var navigationPath: NavigationPath
+    
     var body: some View {
         VStack(spacing: 12) {
             // Quick Info Box
@@ -318,15 +323,28 @@ struct InvoicesList: View {
                 isOverdue: true
             )
             
-            // Due within 4 days (yellow)
-            InvoiceRow(
-                title: "Netonnet",
-                subtitle: "Due in 3 days",
-                amount: "1 568 SEK",
-                icon: "doc.text.fill",
-                color: .yellow,
-                isOverdue: false
-            )
+            // Due within 4 days (yellow) - Tappable
+            Button {
+                navigationPath.append(InvoiceData(
+                    merchant: "Netonnet",
+                    amount: "1 568 SEK",
+                    dueDate: "Nov 12, 2025",
+                    invoiceNumber: "INV-2025-11-001",
+                    issueDate: "Nov 5, 2025",
+                    status: "Due in 3 days",
+                    color: .yellow
+                ))
+            } label: {
+                InvoiceRow(
+                    title: "Netonnet",
+                    subtitle: "Due in 3 days",
+                    amount: "1 568 SEK",
+                    icon: "doc.text.fill",
+                    color: .yellow,
+                    isOverdue: false
+                )
+            }
+            .buttonStyle(PlainButtonStyle())
             
             // Regular due dates (cyan)
             InvoiceRow(
@@ -338,13 +356,13 @@ struct InvoicesList: View {
                 isOverdue: false
             )
             
-            // Paid invoices at the bottom
+            // Scheduled invoices
             InvoiceRow(
                 title: "Clas Ohlson",
-                subtitle: "Paid on Nov 15",
+                subtitle: "Scheduled for Nov 15",
                 amount: "785 SEK",
                 icon: "doc.text.fill",
-                color: .green,
+                color: .cyan,
                 isOverdue: false
             )
             

@@ -12,9 +12,22 @@ extension Notification.Name {
     static let scrollToTop = Notification.Name("scrollToTop")
 }
 
+// Environment key for hiding tab bar
+private struct HideTabBarKey: EnvironmentKey {
+    static let defaultValue: Binding<Bool> = .constant(false)
+}
+
+extension EnvironmentValues {
+    var hideTabBar: Binding<Bool> {
+        get { self[HideTabBarKey.self] }
+        set { self[HideTabBarKey.self] = newValue }
+    }
+}
+
 struct ContentView: View {
     @State private var selectedTab = 0
     @State private var isChatPressed = false
+    @State private var hideTabBar = false
     @StateObject private var paymentPlansManager = PaymentPlansManager()
     
     var body: some View {
@@ -34,9 +47,11 @@ struct ContentView: View {
                     .tag(3)
             }
             .environmentObject(paymentPlansManager)
+            .environment(\.hideTabBar, $hideTabBar)
             
             // Custom Tab Bar with separated Chat bubble
-            GeometryReader { geometry in
+            if !hideTabBar {
+                GeometryReader { geometry in
                 VStack {
                     Spacer()
                     
@@ -129,8 +144,9 @@ struct ContentView: View {
                     .padding(.horizontal, 12)
                     .padding(.bottom, 12 - geometry.safeAreaInsets.bottom)
                 }
+                }
+                .ignoresSafeArea(edges: .bottom)
             }
-            .ignoresSafeArea(edges: .bottom)
         }
         .onAppear {
             // Hide default tab bar
