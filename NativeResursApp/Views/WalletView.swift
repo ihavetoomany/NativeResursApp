@@ -126,6 +126,23 @@ struct PurchasesList: View {
     
     var body: some View {
         VStack(spacing: 12) {
+            // Filter Section Header
+            HStack(spacing: 6) {
+                Text("FILTER")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.secondary)
+                    .textCase(.uppercase)
+                    .tracking(0.5)
+                Image(systemName: "chevron.down")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                Spacer()
+            }
+            .padding(.horizontal, 4)
+            .padding(.top, 4)
+            .padding(.bottom, 4)
+            
             PurchaseRow(
                 title: "Coffee Shop",
                 subtitle: "Today, 2:30 PM",
@@ -176,13 +193,23 @@ struct PurchasesList: View {
                 color: .blue
             )
             
-            PurchaseRow(
-                title: "Pharmacy",
-                subtitle: "4 days ago, 11:20 AM",
-                amount: "235 SEK",
-                icon: "creditcard.fill",
-                color: .brown
-            )
+            Button {
+                navigationPath.append(TransactionData(
+                    merchant: "Bauhaus",
+                    amount: "4 356 kr",
+                    date: "4 days ago",
+                    time: "11:20 AM"
+                ))
+            } label: {
+                PurchaseRow(
+                    title: "Bauhaus",
+                    subtitle: "4 days ago, 11:20 AM",
+                    amount: "4 356 kr",
+                    icon: "diamond.fill",
+                    color: .orange
+                )
+            }
+            .buttonStyle(PlainButtonStyle())
             
             PurchaseRow(
                 title: "Bookstore",
@@ -215,6 +242,20 @@ struct PurchasesList: View {
 struct ActionsList: View {
     var body: some View {
         VStack(spacing: 12) {
+            // "QUICK PEAK" Section Header
+            HStack {
+                Text("QUICK PEAK")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.secondary)
+                    .textCase(.uppercase)
+                    .tracking(0.5)
+                Spacer()
+            }
+            .padding(.horizontal, 4)
+            .padding(.top, 4)
+            .padding(.bottom, 4)
+            
             ActionRow(
                 title: "View PIN",
                 subtitle: "Access your PIN code",
@@ -228,6 +269,20 @@ struct ActionsList: View {
                 icon: "dollarsign.circle.fill",
                 color: .green
             )
+            
+            // "Suggestions" Section Header
+            HStack {
+                Text("Suggestions")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.secondary)
+                    .textCase(.uppercase)
+                    .tracking(0.5)
+                Spacer()
+            }
+            .padding(.horizontal, 4)
+            .padding(.top, 12)
+            .padding(.bottom, 4)
             
             ActionRow(
                 title: "Connect Bank Account",
@@ -306,14 +361,28 @@ struct InvoicesList: View {
             WalletInfoBox()
                 .padding(.vertical, 8)
             
+            // "TO PAY" Section Header
+            HStack {
+                Text("TO PAY")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.secondary)
+                    .textCase(.uppercase)
+                    .tracking(0.5)
+                Spacer()
+            }
+            .padding(.horizontal, 4)
+            .padding(.top, 4)
+            .padding(.bottom, 4)
+            
             // Overdue invoices at the top
             Button {
                 navigationPath.append(InvoiceData(
                     merchant: "Bauhaus",
-                    amount: "2 457 SEK",
+                    amount: "726 kr",
                     dueDate: "Nov 7, 2025",
-                    invoiceNumber: "INV-2025-10-048",
-                    issueDate: "Oct 23, 2025",
+                    invoiceNumber: "INV-2025-11-001",
+                    issueDate: "Nov 7, 2025",
                     status: "Overdue by 2 days",
                     color: .orange
                 ))
@@ -321,7 +390,7 @@ struct InvoicesList: View {
                 InvoiceRow(
                     title: "Bauhaus",
                     subtitle: "Overdue by 2 days",
-                    amount: "2 457 SEK",
+                    amount: "726 kr",
                     icon: "doc.text.fill",
                     color: .orange,
                     isOverdue: true
@@ -732,6 +801,41 @@ struct CreditAccountRow: View {
 }
 
 struct WalletInfoBox: View {
+    // Invoices in "TO PAY" section: overdue and due invoices
+    private let invoices: [(amount: String, isOverdue: Bool)] = [
+        ("726 kr", true),      // Bauhaus - overdue
+        ("895 SEK", true),     // Gekås - overdue
+        ("1 568 SEK", false), // Netonnet - due
+        ("900 SEK", false)     // Elgiganten - due
+    ]
+    
+    private var totalAmount: String {
+        let total = invoices.reduce(0) { sum, invoice in
+            let amountString = invoice.amount
+            let cleaned = amountString.replacingOccurrences(of: "kr", with: "")
+                .replacingOccurrences(of: "SEK", with: "")
+                .replacingOccurrences(of: " ", with: "")
+                .trimmingCharacters(in: .whitespaces)
+            if let value = Double(cleaned) {
+                return sum + value
+            }
+            return sum
+        }
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.groupingSeparator = " "
+        formatter.maximumFractionDigits = 0
+        if let formatted = formatter.string(from: NSNumber(value: total)) {
+            return "\(formatted) SEK"
+        }
+        return "\(Int(total)) SEK"
+    }
+    
+    private var overdueCount: Int {
+        invoices.filter { $0.isOverdue }.count
+    }
+    
     var body: some View {
         VStack(spacing: 16) {
             // Amount to pay
@@ -740,17 +844,19 @@ struct WalletInfoBox: View {
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 
-                Text("5 820 SEK")
+                Text(totalAmount)
                     .font(.system(size: 32, weight: .bold))
                     .foregroundColor(.primary)
                 
-                HStack(spacing: 4) {
-                    Image(systemName: "exclamationmark.circle.fill")
-                        .font(.caption)
-                        .foregroundColor(.orange)
-                    Text("2 overdue invoices")
-                        .font(.caption)
-                        .foregroundColor(.orange)
+                if overdueCount > 0 {
+                    HStack(spacing: 4) {
+                        Image(systemName: "exclamationmark.circle.fill")
+                            .font(.caption)
+                            .foregroundColor(.orange)
+                        Text("\(overdueCount) overdue invoice\(overdueCount == 1 ? "" : "s")")
+                            .font(.caption)
+                            .foregroundColor(.orange)
+                    }
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)

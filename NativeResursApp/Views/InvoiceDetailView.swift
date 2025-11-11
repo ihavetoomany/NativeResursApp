@@ -69,15 +69,10 @@ struct InvoiceDetailView: View {
                         
                             // Payment Information Card
                             if !isInvoicePaid {
-                                PaymentInformationCard(isScheduled: isInvoiceScheduled)
+                                PaymentInformationCard(isScheduled: isInvoiceScheduled, merchant: invoice.merchant, amount: invoice.amount)
                                     .padding(.horizontal)
                                     .frame(width: geometry.size.width)
                             }
-                            
-                            // Invoice Items
-                            InvoiceItemsCard(merchant: invoice.merchant)
-                                .padding(.horizontal)
-                                .frame(width: geometry.size.width)
                             
                             // Payment Options
                             if shouldShowPayButton {
@@ -234,6 +229,16 @@ struct InvoiceDetailsCard: View {
 
 struct PaymentInformationCard: View {
     let isScheduled: Bool
+    let merchant: String
+    let amount: String
+    
+    private var paymentOptionsText: String {
+        merchant == "Bauhaus" ? "Monthly Balance" : "Full Payment"
+    }
+    
+    private var isBauhaus: Bool {
+        merchant == "Bauhaus"
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -276,6 +281,67 @@ struct PaymentInformationCard: View {
                         }
                     }
                 }
+            } else if isBauhaus {
+                // Bauhaus specific payment information
+                VStack(spacing: 8) {
+                    HStack {
+                        Text("Amount")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        Text(amount)
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                        Button(action: {
+                            UIPasteboard.general.string = amount
+                        }) {
+                            Image(systemName: "doc.on.doc")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                    
+                    Divider()
+                    
+                    HStack {
+                        Text("OCR")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        Text("1234567890")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                        Button(action: {
+                            UIPasteboard.general.string = "1234567890"
+                        }) {
+                            Image(systemName: "doc.on.doc")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                    
+                    Divider()
+                    
+                    HStack {
+                        Text("Bankgiro")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        Text("123-4567")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                        Button(action: {
+                            UIPasteboard.general.string = "123-4567"
+                        }) {
+                            Image(systemName: "doc.on.doc")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                }
             } else {
                 VStack(spacing: 8) {
                     HStack {
@@ -300,7 +366,7 @@ struct PaymentInformationCard: View {
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                         Spacer()
-                        Text("Full or Part Payment")
+                        Text(paymentOptionsText)
                             .font(.subheadline)
                             .fontWeight(.medium)
                     }
@@ -329,11 +395,11 @@ struct InvoiceItemsCard: View {
             ]
         case "Bauhaus":
             return [
-                ("Paint Roller Set", "2", "298 SEK", "2 457 SEK"),
-                ("Interior Paint 10L", "3", "1 347 SEK", "2 457 SEK"),
-                ("Painter's Tape", "4", "236 SEK", "2 457 SEK"),
-                ("Drop Cloth", "2", "238 SEK", "2 457 SEK"),
-                ("Paint Tray Kit", "1", "338 SEK", "2 457 SEK")
+                ("Paint Roller Set", "2", "298 kr", "4 356 kr"),
+                ("Interior Paint 10L", "3", "800 kr", "4 356 kr"),
+                ("Painter's Tape", "4", "200 kr", "4 356 kr"),
+                ("Drop Cloth", "2", "200 kr", "4 356 kr"),
+                ("Paint Tray Kit", "1", "160 kr", "4 356 kr")
             ]
         case "Gekås":
             return [
@@ -376,7 +442,7 @@ struct InvoiceItemsCard: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Invoice Items")
+            Text("Items")
                 .font(.headline)
                 .fontWeight(.semibold)
             
@@ -447,16 +513,16 @@ struct PaymentOptionsCard: View {
             VStack(spacing: 12) {
                 PaymentOptionRow(
                     icon: "checkmark.circle.fill",
-                    title: "Pay in Full",
-                    description: "Pay the entire amount now",
+                    title: "Pay Invoice",
+                    description: "Pay this month's balance",
                     color: .blue,
                     action: onPayInFull
                 )
                 
                 PaymentOptionRow(
                     icon: "calendar.circle.fill",
-                    title: "Part Payment",
-                    description: "Pay a portion now, rest later",
+                    title: "Make End Payment",
+                    description: "Pay back the full debt",
                     color: .purple,
                     action: onPartPayment
                 )
