@@ -69,7 +69,7 @@ struct WalletView: View {
                         }
                         
                         Button(action: { selectedTab = 2 }) {
-                            Text("Errands")
+                            Text("Actions")
                                 .font(.headline)
                                 .fontWeight(.semibold)
                                 .foregroundColor(selectedTab == 2 ? .primary : .secondary)
@@ -94,7 +94,7 @@ struct WalletView: View {
                         } else if selectedTab == 1 {
                             PurchasesList(navigationPath: $navigationPath)
                         } else {
-                            ErrandsList()
+                            ActionsList()
                         }
                     }
                 }
@@ -123,14 +123,9 @@ struct WalletView: View {
 
 struct PurchasesList: View {
     @Binding var navigationPath: NavigationPath
-    @State private var showCreditDetails = false
     
     var body: some View {
         VStack(spacing: 12) {
-            // Credit Info Box
-            CreditInfoBox(showDetails: $showCreditDetails)
-                .padding(.vertical, 8)
-            
             PurchaseRow(
                 title: "Coffee Shop",
                 subtitle: "Today, 2:30 PM",
@@ -217,49 +212,56 @@ struct PurchasesList: View {
     }
 }
 
-struct ErrandsList: View {
+struct ActionsList: View {
     var body: some View {
         VStack(spacing: 12) {
-            ErrandRow(
-                title: "Renew Insurance",
-                subtitle: "Due in 2 days",
-                icon: "shield.fill",
+            ActionRow(
+                title: "View PIN",
+                subtitle: "Access your PIN code",
+                icon: "eye.fill",
                 color: .blue
             )
             
-            ErrandRow(
-                title: "Update Payment Method",
-                subtitle: "Recommended",
-                icon: "creditcard.fill",
-                color: .orange
-            )
-            
-            ErrandRow(
-                title: "Review Credit Limit",
-                subtitle: "Action available",
-                icon: "chart.bar.fill",
-                color: .purple
-            )
-            
-            ErrandRow(
-                title: "Complete Profile",
-                subtitle: "80% complete",
-                icon: "person.fill",
+            ActionRow(
+                title: "Check Balance",
+                subtitle: "View account balance",
+                icon: "dollarsign.circle.fill",
                 color: .green
             )
             
-            ErrandRow(
-                title: "Set Up Auto-Pay",
-                subtitle: "Simplify payments",
-                icon: "repeat.circle.fill",
+            ActionRow(
+                title: "Connect Bank Account",
+                subtitle: "Link your bank",
+                icon: "building.columns.fill",
                 color: .blue
+            )
+            
+            ActionRow(
+                title: "Complete Loan Application",
+                subtitle: "Finish your application",
+                icon: "doc.text.fill",
+                color: .orange
+            )
+            
+            ActionRow(
+                title: "Update KYC",
+                subtitle: "Verify your identity",
+                icon: "person.text.rectangle.fill",
+                color: .purple
+            )
+            
+            ActionRow(
+                title: "Activate Click to Pay",
+                subtitle: "Enable quick payments",
+                icon: "hand.tap.fill",
+                color: .cyan
             )
         }
         .padding(.horizontal)
     }
 }
 
-struct ErrandRow: View {
+struct ActionRow: View {
     let title: String
     let subtitle: String
     let icon: String
@@ -394,6 +396,20 @@ struct InvoicesList: View {
                 )
             }
             .buttonStyle(PlainButtonStyle())
+            
+            // "Handled" Section Header
+            HStack {
+                Text("Handled")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.secondary)
+                    .textCase(.uppercase)
+                    .tracking(0.5)
+                Spacer()
+            }
+            .padding(.horizontal, 4)
+            .padding(.top, 12)
+            .padding(.bottom, 4)
             
             // Scheduled invoices
             Button {

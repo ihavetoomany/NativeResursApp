@@ -270,7 +270,7 @@ struct PaymentInformationCard: View {
                             Image(systemName: "creditcard.fill")
                                 .font(.caption)
                                 .foregroundColor(.cyan)
-                            Text("Resurs Gold")
+                            Text("Nordea *894")
                                 .font(.subheadline)
                                 .fontWeight(.medium)
                         }
@@ -287,7 +287,7 @@ struct PaymentInformationCard: View {
                             Image(systemName: "creditcard.fill")
                                 .font(.caption)
                                 .foregroundColor(.blue)
-                            Text("Resurs Gold")
+                            Text("Nordea *894")
                                 .font(.subheadline)
                                 .fontWeight(.medium)
                         }
@@ -580,10 +580,10 @@ struct PaymentSheet: View {
                             .clipShape(Circle())
                         
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Resurs Gold")
+                            Text("Nordea *894")
                                 .font(.subheadline)
                                 .fontWeight(.medium)
-                            Text("25 000 SEK available")
+                            Text("Checking account")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
