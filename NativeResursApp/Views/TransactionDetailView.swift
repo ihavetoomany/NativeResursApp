@@ -634,7 +634,7 @@ struct InvoiceHistorySection: View {
             invoiceNumber: "INV-2025-09-001",
             date: "Sep 9, 2025",
             amount: "726 kr",
-            status: "Paid",
+            status: "of 4 356 kr",
             isPaid: true
         )
     ]
