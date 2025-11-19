@@ -9,10 +9,18 @@ import SwiftUI
 
 struct AccountsView: View {
     @State private var navigationPath = NavigationPath()
+    @State private var showProfile = false
     
     var body: some View {
         NavigationStack(path: $navigationPath) {
-            StickyHeaderView(title: "Accounts", subtitle: "Your engagements", trailingButton: "person.circle.fill") {
+            StickyHeaderView(
+                title: "Accounts",
+                subtitle: "Your engagements",
+                trailingButton: "person.circle.fill",
+                trailingButtonAction: {
+                    showProfile = true
+                }
+            ) {
                 VStack(spacing: 16) {
                     // Account Cards
                     VStack(spacing: 16) {
@@ -88,6 +96,9 @@ struct AccountsView: View {
                     navigationPath.removeLast(navigationPath.count)
                 }
                 // If at root, the StickyHeaderView will handle scrolling to top
+            }
+            .sheet(isPresented: $showProfile) {
+                ProfileView()
             }
         }
     }

@@ -9,14 +9,22 @@ import SwiftUI
 
 struct ExploreView: View {
     @State private var navigationPath = NavigationPath()
+    @State private var showProfile = false
     
     var body: some View {
         NavigationStack(path: $navigationPath) {
-            StickyHeaderView(title: "Explore", subtitle: "Discover more", trailingButton: "person.circle.fill") {
+            StickyHeaderView(
+                title: "Discover",
+                subtitle: "Explore more",
+                trailingButton: "person.circle.fill",
+                trailingButtonAction: {
+                    showProfile = true
+                }
+            ) {
                 VStack(spacing: 16) {
-                    // Featured Section
+                    // Highlights Section
                     VStack(alignment: .leading, spacing: 16) {
-                        Text("Featured")
+                        Text("Highlights")
                             .font(.title2)
                             .fontWeight(.semibold)
                             .padding(.horizontal)
@@ -24,23 +32,23 @@ struct ExploreView: View {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 16) {
                                 FeaturedCard(
-                                    title: "Investment Opportunities",
-                                    subtitle: "Grow your wealth with smart investments",
-                                    icon: "chart.line.uptrend.xyaxis",
+                                    title: "Special Offers",
+                                    subtitle: "Exclusive deals for you",
+                                    icon: "star.fill",
                                     color: .blue
                                 )
                                 
                                 FeaturedCard(
-                                    title: "Credit Cards",
-                                    subtitle: "Earn rewards on every purchase",
-                                    icon: "creditcard.fill",
+                                    title: "New Features",
+                                    subtitle: "Discover what's new",
+                                    icon: "sparkles",
                                     color: .purple
                                 )
                                 
                                 FeaturedCard(
-                                    title: "Loans & Mortgages",
-                                    subtitle: "Get the best rates available",
-                                    icon: "house.fill",
+                                    title: "Top Products",
+                                    subtitle: "Most popular choices",
+                                    icon: "chart.bar.fill",
                                     color: .green
                                 )
                             }
@@ -50,39 +58,39 @@ struct ExploreView: View {
                     .padding(.top, 24)
                     .padding(.bottom, 16)
                     
-                    // Services Grid
+                    // Partner Offers Section
                     VStack(alignment: .leading, spacing: 16) {
-                        Text("Services")
+                        Text("Partner Offers")
                             .font(.title2)
                             .fontWeight(.semibold)
                             .padding(.horizontal)
                         
                         LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 16) {
                             ServiceCard(
-                                title: "Mobile Banking",
-                                subtitle: "Bank on the go",
-                                icon: "iphone",
+                                title: "Partner Deal 1",
+                                subtitle: "Exclusive offer",
+                                icon: "handshake.fill",
                                 color: .blue
                             )
                             
                             ServiceCard(
-                                title: "Bill Pay",
-                                subtitle: "Pay bills easily",
-                                icon: "doc.text.fill",
+                                title: "Partner Deal 2",
+                                subtitle: "Limited time",
+                                icon: "gift.fill",
                                 color: .orange
                             )
                             
                             ServiceCard(
-                                title: "Transfer Money",
-                                subtitle: "Send money instantly",
-                                icon: "arrow.left.arrow.right",
+                                title: "Partner Deal 3",
+                                subtitle: "Special discount",
+                                icon: "tag.fill",
                                 color: .green
                             )
                             
                             ServiceCard(
-                                title: "Financial Planning",
-                                subtitle: "Plan your future",
-                                icon: "chart.bar.fill",
+                                title: "Partner Deal 4",
+                                subtitle: "Best value",
+                                icon: "percent",
                                 color: .purple
                             )
                         }
@@ -90,10 +98,10 @@ struct ExploreView: View {
                     }
                     .padding(.bottom, 16)
                     
-                    // News Section
+                    // News Section with Marketing Campaigns
                     VStack(alignment: .leading, spacing: 16) {
                         HStack {
-                            Text("Financial News")
+                            Text("News")
                                 .font(.title2)
                                 .fontWeight(.semibold)
                             Spacer()
@@ -107,45 +115,39 @@ struct ExploreView: View {
                         
                         VStack(spacing: 12) {
                             NewsRow(
-                                title: "Market Update: Tech Stocks Rise",
+                                title: "Marketing Campaign: Summer Savings",
                                 subtitle: "2 hours ago",
-                                category: "Markets"
+                                category: "Marketing"
                             )
                             
                             NewsRow(
-                                title: "New Banking Regulations Take Effect",
+                                title: "Marketing Campaign: New Year Special",
                                 subtitle: "5 hours ago",
-                                category: "Regulation"
+                                category: "Marketing"
                             )
                             
                             NewsRow(
-                                title: "Investment Tips for Beginners",
+                                title: "Latest Financial News",
                                 subtitle: "1 day ago",
-                                category: "Education"
+                                category: "News"
                             )
                             
                             NewsRow(
-                                title: "Interest Rates Expected to Change",
+                                title: "Marketing Campaign: Spring Promotion",
                                 subtitle: "2 days ago",
-                                category: "Economy"
+                                category: "Marketing"
                             )
                             
                             NewsRow(
-                                title: "Cryptocurrency Trends in 2025",
+                                title: "Industry Updates",
                                 subtitle: "3 days ago",
-                                category: "Crypto"
+                                category: "News"
                             )
                             
                             NewsRow(
-                                title: "How to Build Your Emergency Fund",
+                                title: "Marketing Campaign: Holiday Deals",
                                 subtitle: "4 days ago",
-                                category: "Savings"
-                            )
-                            
-                            NewsRow(
-                                title: "Real Estate Market Analysis",
-                                subtitle: "1 week ago",
-                                category: "Property"
+                                category: "Marketing"
                             )
                         }
                         .padding(.horizontal)
@@ -159,6 +161,9 @@ struct ExploreView: View {
                     navigationPath.removeLast(navigationPath.count)
                 }
                 // If at root, the StickyHeaderView will handle scrolling to top
+            }
+            .sheet(isPresented: $showProfile) {
+                ProfileView()
             }
         }
     }

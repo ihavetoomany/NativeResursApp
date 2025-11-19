@@ -17,6 +17,7 @@ struct TransactionData: Hashable {
 struct WalletView: View {
     @State private var selectedTab = 0
     @State private var navigationPath = NavigationPath()
+    @State private var showProfile = false
     
     private var greeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
@@ -34,7 +35,14 @@ struct WalletView: View {
     
     var body: some View {
         NavigationStack(path: $navigationPath) {
-            StickyHeaderView(title: "John", subtitle: greeting, trailingButton: "person.circle.fill") {
+            StickyHeaderView(
+                title: "John",
+                subtitle: greeting,
+                trailingButton: "person.circle.fill",
+                trailingButtonAction: {
+                    showProfile = true
+                }
+            ) {
                 // Sticky Pills Section
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {
@@ -116,6 +124,9 @@ struct WalletView: View {
                     navigationPath.removeLast(navigationPath.count)
                 }
                 // If at root, the StickyHeaderView will handle scrolling to top
+            }
+            .sheet(isPresented: $showProfile) {
+                ProfileView()
             }
         }
     }
@@ -389,9 +400,9 @@ struct InvoicesList: View {
             } label: {
                 InvoiceRow(
                     title: "Bauhaus",
-                    subtitle: "Overdue by 2 days",
+                    subtitle: "Nov 7, 2025",
                     amount: "726 kr",
-                    icon: "doc.text.fill",
+                    icon: "clock.fill",
                     color: .orange,
                     isOverdue: true
                 )
@@ -411,9 +422,9 @@ struct InvoicesList: View {
             } label: {
                 InvoiceRow(
                     title: "Gekås",
-                    subtitle: "Overdue by 1 day",
+                    subtitle: "Oct 25, 2025",
                     amount: "895 SEK",
-                    icon: "doc.text.fill",
+                    icon: "clock.fill",
                     color: .orange,
                     isOverdue: true
                 )
@@ -434,11 +445,12 @@ struct InvoicesList: View {
             } label: {
                 InvoiceRow(
                     title: "Netonnet",
-                    subtitle: "Due in 3 days",
+                    subtitle: "Nov 12, 2025",
                     amount: "1 568 SEK",
-                    icon: "doc.text.fill",
+                    icon: "clock.fill",
                     color: .yellow,
-                    isOverdue: false
+                    isOverdue: false,
+                    statusOverride: "3 days"
                 )
             }
             .buttonStyle(PlainButtonStyle())
@@ -457,11 +469,12 @@ struct InvoicesList: View {
             } label: {
                 InvoiceRow(
                     title: "Elgiganten",
-                    subtitle: "Due in 1 week",
+                    subtitle: "Nov 16, 2025",
                     amount: "900 SEK",
-                    icon: "doc.text.fill",
+                    icon: "clock.fill",
                     color: .yellow,
-                    isOverdue: false
+                    isOverdue: false,
+                    statusOverride: "1 week"
                 )
             }
             .buttonStyle(PlainButtonStyle())
@@ -494,9 +507,9 @@ struct InvoicesList: View {
             } label: {
                 InvoiceRow(
                     title: "Clas Ohlson",
-                    subtitle: "Scheduled for Nov 15",
+                    subtitle: "Nov 1, 2025",
                     amount: "785 SEK",
-                    icon: "doc.text.fill",
+                    icon: "checkmark",
                     color: .cyan,
                     isOverdue: false
                 )
@@ -517,9 +530,9 @@ struct InvoicesList: View {
             } label: {
                 InvoiceRow(
                     title: "Stadium",
-                    subtitle: "Paid on Nov 8",
+                    subtitle: "Oct 25, 2025",
                     amount: "2 340 SEK",
-                    icon: "doc.text.fill",
+                    icon: "checkmark",
                     color: .green,
                     isOverdue: false
                 )
@@ -539,9 +552,9 @@ struct InvoicesList: View {
             } label: {
                 InvoiceRow(
                     title: "ICA",
-                    subtitle: "Paid on Nov 3",
+                    subtitle: "Oct 20, 2025",
                     amount: "452 SEK",
-                    icon: "doc.text.fill",
+                    icon: "checkmark",
                     color: .green,
                     isOverdue: false
                 )
@@ -561,9 +574,9 @@ struct InvoicesList: View {
             } label: {
                 InvoiceRow(
                     title: "Åhléns",
-                    subtitle: "Paid on Oct 28",
+                    subtitle: "Oct 14, 2025",
                     amount: "300 SEK",
-                    icon: "doc.text.fill",
+                    icon: "checkmark",
                     color: .green,
                     isOverdue: false
                 )
@@ -619,35 +632,66 @@ struct InvoiceRow: View {
     let icon: String
     let color: Color
     let isOverdue: Bool
+    var statusOverride: String? = nil
     
     var body: some View {
         HStack(spacing: 16) {
+            // Left: Status icon
             Image(systemName: icon)
                 .font(.title3)
-                .foregroundColor(color)
-                .frame(width: 36, height: 36)
-                .background(color.opacity(0.2))
+                .foregroundColor(.white)
+                .frame(width: 44, height: 44)
+                .background(color)
                 .clipShape(Circle())
             
+            // Middle: Invoice number and date
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.primary)
                 Text(subtitle)
-                    .font(.caption)
-                    .foregroundColor(isOverdue ? color : .secondary)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
             }
             
             Spacer()
             
-            Text(amount)
-                .font(.subheadline)
-                .fontWeight(.semibold)
-                .foregroundColor(.primary)
+            // Right: Amount and status
+            VStack(alignment: .trailing, spacing: 4) {
+                Text(amount)
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.primary)
+                if !statusText.isEmpty {
+                    Text(statusText)
+                        .font(.subheadline)
+                        .foregroundColor(statusColor)
+                }
+            }
         }
         .padding(16)
         .background(.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+    
+    private var statusText: String {
+        if let override = statusOverride {
+            return override
+        }
+        if isOverdue {
+            return "Overdue"
+        } else if color == .green {
+            return "Paid"
+        } else if color == .cyan {
+            return "Scheduled"
+        } else {
+            return ""
+        }
+    }
+    
+    private var statusColor: Color {
+        return color
     }
 }
 

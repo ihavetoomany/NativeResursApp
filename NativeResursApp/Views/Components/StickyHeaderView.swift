@@ -101,23 +101,21 @@ struct StickyHeaderView<Content: View, StickyContent: View>: View {
                                 .foregroundColor(.primary)
                         }
                         
-                    // Icon - fades out
-                    if !trailingButton.isEmpty {
-                        if scrollProgress < 0.5 {
-                            Spacer()
-                            
-                            Button(action: {
-                                trailingButtonAction?()
-                            }) {
-                                Image(systemName: trailingButton)
-                                    .font(.largeTitle)
-                                    .foregroundColor(Color(UIColor.systemBlue))
-                                    .opacity(1.0 - scrollProgress * 2)
+                        // Icon - fades out
+                        if !trailingButton.isEmpty {
+                            if scrollProgress < 0.5 {
+                                Spacer()
+                                
+                                GlassIconButton(systemName: trailingButton, tint: Color(UIColor.systemBlue)) {
+                                    trailingButtonAction?()
+                                }
+                                .opacity(1.0 - scrollProgress * 2)
+                                .accessibilityLabel("Profile")
+                                .accessibilityHint("Open profile settings")
+                            } else {
+                                Spacer()
                             }
-                        } else {
-                            Spacer()
                         }
-                    }
                 }
             }
                 .padding(.horizontal)

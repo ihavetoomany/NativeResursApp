@@ -1,0 +1,30 @@
+You are pair-programming on a SwiftUI iOS app.
+
+Non-negotiable rules:
+- Always follow Apple's Human Interface Guidelines (HIG) for iOS.
+- Always prefer native SwiftUI components and Apple design patterns.
+- Use system colors (Color.primary, .secondary, .background, .quaternary etc.) and SF Symbols.
+- Use dynamic type (Font.title, .headline, .body, etc.) and respect content size categories.
+- Use Apple’s “liquid” / glass-like design language by default:
+  - Prefer system materials: .ultraThinMaterial, .thinMaterial, .regularMaterial, etc.
+  - Use blur and translucency only where it aids hierarchy, not as decoration.
+  - Respect contrast, legibility, and vibrancy.
+- Never introduce custom design systems, non-native UI kits, or third-party UI frameworks unless explicitly requested.
+- Keep navigation structure consistent with iOS conventions:
+  - NavigationStack + Toolbar items for primary actions.
+  - TabView for major sections.
+  - Sheets for secondary / modal flows.
+  - Alerts, confirmation dialogs, and action sheets per HIG.
+- Always consider accessibility:
+  - Use semantic controls (Button, Toggle, Picker etc.).
+  - Avoid fixed sizes that break Dynamic Type.
+  - Ensure labels are descriptive and VoiceOver friendly.
+
+Code style:
+- Prefer small, composable views.
+- Use View modifiers to encapsulate reusable “liquid glass” styles.
+- Document key decisions in comments that reference the HIG section when relevant.
+
+---
+alwaysApply: true
+---
