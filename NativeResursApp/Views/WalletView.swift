@@ -134,9 +134,13 @@ struct WalletView: View {
 
 struct PurchasesList: View {
     @Binding var navigationPath: NavigationPath
+    @State private var showCreditDetails = false
     
     var body: some View {
         VStack(spacing: 12) {
+            CreditInfoBox(showDetails: $showCreditDetails)
+                .padding(.vertical, 8)
+            
             // Filter Section Header
             HStack(spacing: 6) {
                 Text("FILTER")
@@ -253,34 +257,6 @@ struct PurchasesList: View {
 struct ActionsList: View {
     var body: some View {
         VStack(spacing: 12) {
-            // "QUICK PEAK" Section Header
-            HStack {
-                Text("QUICK PEAK")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.secondary)
-                    .textCase(.uppercase)
-                    .tracking(0.5)
-                Spacer()
-            }
-            .padding(.horizontal, 4)
-            .padding(.top, 4)
-            .padding(.bottom, 4)
-            
-            ActionRow(
-                title: "View PIN",
-                subtitle: "Access your PIN code",
-                icon: "eye.fill",
-                color: .blue
-            )
-            
-            ActionRow(
-                title: "Check Balance",
-                subtitle: "View account balance",
-                icon: "dollarsign.circle.fill",
-                color: .green
-            )
-            
             // "Suggestions" Section Header
             HStack {
                 Text("Suggestions")
@@ -402,7 +378,7 @@ struct InvoicesList: View {
                     title: "Bauhaus",
                     subtitle: "Nov 7, 2025",
                     amount: "726 kr",
-                    icon: "clock.fill",
+                    icon: nil,
                     color: .orange,
                     isOverdue: true
                 )
@@ -424,7 +400,7 @@ struct InvoicesList: View {
                     title: "Gekås",
                     subtitle: "Oct 25, 2025",
                     amount: "895 SEK",
-                    icon: "clock.fill",
+                    icon: nil,
                     color: .orange,
                     isOverdue: true
                 )
@@ -447,7 +423,7 @@ struct InvoicesList: View {
                     title: "Netonnet",
                     subtitle: "Nov 12, 2025",
                     amount: "1 568 SEK",
-                    icon: "clock.fill",
+                    icon: nil,
                     color: .yellow,
                     isOverdue: false,
                     statusOverride: "3 days"
@@ -471,7 +447,7 @@ struct InvoicesList: View {
                     title: "Elgiganten",
                     subtitle: "Nov 16, 2025",
                     amount: "900 SEK",
-                    icon: "clock.fill",
+                    icon: nil,
                     color: .yellow,
                     isOverdue: false,
                     statusOverride: "1 week"
@@ -629,7 +605,7 @@ struct InvoiceRow: View {
     let title: String
     let subtitle: String
     let amount: String
-    let icon: String
+    let icon: String?
     let color: Color
     let isOverdue: Bool
     var statusOverride: String? = nil
@@ -637,12 +613,16 @@ struct InvoiceRow: View {
     var body: some View {
         HStack(spacing: 16) {
             // Left: Status icon
-            Image(systemName: icon)
-                .font(.title3)
-                .foregroundColor(.white)
+            Circle()
+                .fill(color)
                 .frame(width: 44, height: 44)
-                .background(color)
-                .clipShape(Circle())
+                .overlay {
+                    if let icon {
+                        Image(systemName: icon)
+                            .font(.title3)
+                            .foregroundColor(.white)
+                    }
+                }
             
             // Middle: Invoice number and date
             VStack(alignment: .leading, spacing: 4) {
@@ -699,33 +679,76 @@ struct CreditInfoBox: View {
     @Binding var showDetails: Bool
     
     var body: some View {
-        VStack(spacing: 12) {
-            // Available credit title
-            Text("Your Credit Cards")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            Divider()
-            
-            // Credit accounts
-            VStack(alignment: .leading, spacing: 8) {
-                CreditAccountRow(name: "Resurs Gold", available: "25 000 SEK", limit: "50 000 SEK")
-                CreditAccountRow(name: "Resurs Family", available: "15 000 SEK", limit: "30 000 SEK")
+        Button {
+            showDetails = true
+        } label: {
+            VStack(alignment: .leading, spacing: 16) {
+                header
+                
+                Divider()
+                    .background(Color.primary.opacity(0.1))
+                
+                VStack(spacing: 12) {
+                    ForEach(Array(creditAccounts.enumerated()), id: \.element.name) { index, account in
+                        CreditAccountRow(
+                            name: account.name,
+                            available: account.available,
+                            limit: account.limit
+                        )
+                        if index < creditAccounts.count - 1 {
+                            Divider()
+                                .background(Color.primary.opacity(0.05))
+                        }
+                    }
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(20)
         }
-        .padding(16)
-        .background(Color.green.opacity(0.1))
+        .buttonStyle(.plain)
         .background(.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .onTapGesture {
-            showDetails = true
-        }
+        .background(Color(uiColor: .systemGreen).opacity(0.08))
+        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .stroke(Color.white.opacity(0.08), lineWidth: 1)
+        )
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Available credit overview")
+        .accessibilityValue(accessibilitySummary)
+        .accessibilityHint("Opens detailed view with credit account PIN information")
         .sheet(isPresented: $showDetails) {
             CreditDetailsSheet()
                 .presentationDetents([.medium])
                 .presentationDragIndicator(.visible)
+        }
+    }
+    
+    private let creditAccounts: [(name: String, available: String, limit: String)] = [
+        (name: "Resurs Gold", available: "25 000 SEK", limit: "50 000 SEK"),
+        (name: "Resurs Family", available: "15 000 SEK", limit: "30 000 SEK")
+    ]
+    
+    private var accessibilitySummary: String {
+        creditAccounts
+            .map { "\($0.name): \($0.available) available" }
+            .joined(separator: ", ")
+    }
+    
+    private var header: some View {
+        HStack(alignment: .firstTextBaseline) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Available Credit")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                Text("Across your credit accounts")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            Spacer()
+            Image(systemName: "creditcard.circle.fill")
+                .font(.title3)
+                .foregroundColor(.secondary)
         }
     }
 }
@@ -810,38 +833,46 @@ struct CreditAccountRow: View {
     let limit: String
     
     var body: some View {
-        HStack(alignment: .top) {
-            Image(systemName: "creditcard.fill")
-                .font(.subheadline)
-                .foregroundColor(.green)
-                .frame(width: 28, height: 28)
-                .offset(y: -4)
+        HStack(spacing: 16) {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(accentColor.opacity(0.2))
+                .frame(width: 48, height: 48)
+                .overlay(
+                    Image(systemName: "creditcard.fill")
+                        .font(.title3)
+                        .foregroundColor(accentColor)
+                )
             
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(name)
                     .font(.subheadline)
-                    .fontWeight(.medium)
-                Text("\(available) available of \(limit)")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                    .fontWeight(.semibold)
+                HStack(spacing: 4) {
+                    Image(systemName: "lock.fill")
+                        .font(.caption2)
+                        .foregroundColor(accentColor)
+                    Text("PIN protected")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
             }
             
             Spacer()
             
-            HStack(spacing: 6) {
-                Image(systemName: "lock.fill")
+            VStack(alignment: .trailing, spacing: 2) {
+                Text(available)
+                    .font(.headline)
+                    .fontWeight(.bold)
+                Text("of \(limit)")
                     .font(.caption)
-                    .foregroundColor(.green)
-                Text("***")
-                    .font(.system(size: 12, weight: .bold))
-                    .foregroundColor(.green)
-                    .tracking(2)
+                    .foregroundColor(.secondary)
             }
         }
-        .padding(.vertical, 10)
-        .background(Color.clear)
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(name) has \(available) available of \(limit)")
     }
+    
+    private let accentColor = Color(uiColor: .systemGreen)
 }
 
 struct WalletInfoBox: View {
