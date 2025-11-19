@@ -17,24 +17,52 @@ struct StickyHeaderView<Content: View, StickyContent: View>: View {
     let title: String
     let subtitle: String
     let trailingButton: String
+    let trailingButtonTint: Color
+    let trailingButtonSize: CGFloat
+    let trailingButtonIconScale: CGFloat
     let trailingButtonAction: (() -> Void)?
     let content: Content
     let stickyContent: StickyContent?
     @StateObject private var scrollObserver = ScrollOffsetObserver()
     
-    init(title: String, subtitle: String, trailingButton: String = "person.circle.fill", trailingButtonAction: (() -> Void)? = nil, @ViewBuilder content: () -> Content) where StickyContent == EmptyView {
+    init(
+        title: String,
+        subtitle: String,
+        trailingButton: String = "person.circle.fill",
+        trailingButtonTint: Color = Color(UIColor.systemBlue),
+        trailingButtonSize: CGFloat = 44,
+        trailingButtonIconScale: CGFloat = 0.45,
+        trailingButtonAction: (() -> Void)? = nil,
+        @ViewBuilder content: () -> Content
+    ) where StickyContent == EmptyView {
         self.title = title
         self.subtitle = subtitle
         self.trailingButton = trailingButton
+        self.trailingButtonTint = trailingButtonTint
+        self.trailingButtonSize = trailingButtonSize
+        self.trailingButtonIconScale = trailingButtonIconScale
         self.trailingButtonAction = trailingButtonAction
         self.content = content()
         self.stickyContent = nil
     }
     
-    init(title: String, subtitle: String, trailingButton: String = "person.circle.fill", trailingButtonAction: (() -> Void)? = nil, @ViewBuilder stickyContent: () -> StickyContent, @ViewBuilder content: () -> Content) {
+    init(
+        title: String,
+        subtitle: String,
+        trailingButton: String = "person.circle.fill",
+        trailingButtonTint: Color = Color(UIColor.systemBlue),
+        trailingButtonSize: CGFloat = 44,
+        trailingButtonIconScale: CGFloat = 0.45,
+        trailingButtonAction: (() -> Void)? = nil,
+        @ViewBuilder stickyContent: () -> StickyContent,
+        @ViewBuilder content: () -> Content
+    ) {
         self.title = title
         self.subtitle = subtitle
         self.trailingButton = trailingButton
+        self.trailingButtonTint = trailingButtonTint
+        self.trailingButtonSize = trailingButtonSize
+        self.trailingButtonIconScale = trailingButtonIconScale
         self.trailingButtonAction = trailingButtonAction
         self.stickyContent = stickyContent()
         self.content = content()
@@ -106,8 +134,12 @@ struct StickyHeaderView<Content: View, StickyContent: View>: View {
                             if scrollProgress < 0.5 {
                                 Spacer()
                                 
-                                GlassIconButton(systemName: trailingButton, tint: Color(UIColor.systemBlue)) {
+                                GlassIconButton(size: trailingButtonSize, action: {
                                     trailingButtonAction?()
+                                }) {
+                                    Image(systemName: trailingButton)
+                                        .font(.system(size: trailingButtonSize * trailingButtonIconScale, weight: .semibold))
+                                        .foregroundColor(trailingButtonTint)
                                 }
                                 .opacity(1.0 - scrollProgress * 2)
                                 .accessibilityLabel("Profile")

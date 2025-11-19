@@ -191,14 +191,14 @@ struct ProfileView: View {
                 // Sticky Header with close button, title/subtitle
                 VStack(alignment: .leading, spacing: 0) {
                     HStack(alignment: .top) {
-                        // Close button at top left
+                        Spacer()
+                        
+                        // Close button at top right
                         GlassIconButton(systemName: "xmark") {
                             dismiss()
                         }
                         .accessibilityLabel("Close profile")
                         .accessibilityHint("Dismiss profile overlay")
-                        
-                        Spacer()
                     }
                     .padding(.horizontal)
                     .padding(.top, 20)
@@ -221,8 +221,10 @@ struct ProfileView: View {
                 .background(Color(uiColor: .systemBackground).opacity(0.95))
                 .background(.ultraThinMaterial)
             }
-            .navigationBarHidden(true)
+            .ignoresSafeArea(edges: .top)
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar(.visible, for: .navigationBar)
+            .toolbarBackground(.hidden, for: .navigationBar)
             .navigationDestination(for: String.self) { destination in
                 destinationView(for: destination)
             }
@@ -239,6 +241,14 @@ struct ProfileView: View {
     
     @ViewBuilder
     private func destinationView(for destination: String) -> some View {
+        destinationContent(for: destination)
+            .toolbar(.visible, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Color(uiColor: .systemBackground), for: .navigationBar)
+    }
+    
+    @ViewBuilder
+    private func destinationContent(for destination: String) -> some View {
         switch destination {
         case "ContactInformation":
             ContactInformationView()

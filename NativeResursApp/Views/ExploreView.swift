@@ -16,7 +16,10 @@ struct ExploreView: View {
             StickyHeaderView(
                 title: "Discover",
                 subtitle: "Explore more",
-                trailingButton: "person.circle.fill",
+                trailingButton: "person.fill",
+                trailingButtonTint: .black,
+                trailingButtonSize: 52,
+                trailingButtonIconScale: 0.6,
                 trailingButtonAction: {
                     showProfile = true
                 }
