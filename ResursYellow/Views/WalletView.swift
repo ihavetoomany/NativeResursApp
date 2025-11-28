@@ -1,6 +1,6 @@
 //
 //  WalletView.swift
-//  NativeResursApp
+//  ResursYellow
 //
 //  Created by Bjarne Werner on 2025-10-04.
 //
@@ -12,6 +12,210 @@ struct TransactionData: Hashable {
     let amount: String
     let date: String
     let time: String
+}
+
+enum InvoiceCategory {
+    case overdue
+    case dueSoon
+    case handledScheduled
+    case handledPaid
+}
+
+struct InvoiceItem: Identifiable {
+    let id = UUID()
+    let merchant: String
+    let subtitle: String
+    let amount: String
+    let icon: String?
+    let color: Color
+    let isOverdue: Bool
+    var statusOverride: String?
+    let category: InvoiceCategory
+    let detail: InvoiceData
+    var isSelected: Bool = false
+    
+    var numericAmount: Double {
+        let cleaned = amount
+            .replacingOccurrences(of: "kr", with: "")
+            .replacingOccurrences(of: "SEK", with: "")
+            .replacingOccurrences(of: " ", with: "")
+            .trimmingCharacters(in: .whitespaces)
+        return Double(cleaned) ?? 0
+    }
+}
+
+extension InvoiceItem {
+    static var overdueSamples: [InvoiceItem] {
+        [
+            InvoiceItem(
+                merchant: "Bauhaus",
+                subtitle: "Nov 7, 2025",
+                amount: "726 kr",
+                icon: nil,
+                color: .orange,
+                isOverdue: true,
+                statusOverride: nil,
+                category: .overdue,
+                detail: InvoiceData(
+                    merchant: "Bauhaus",
+                    amount: "726 kr",
+                    dueDate: "Nov 7, 2025",
+                    invoiceNumber: "INV-2025-11-001",
+                    issueDate: "Nov 7, 2025",
+                    status: "Overdue by 2 days",
+                    color: .orange
+                )
+            ),
+            InvoiceItem(
+                merchant: "Gekås",
+                subtitle: "Oct 25, 2025",
+                amount: "895 SEK",
+                icon: nil,
+                color: .orange,
+                isOverdue: true,
+                statusOverride: nil,
+                category: .overdue,
+                detail: InvoiceData(
+                    merchant: "Gekås",
+                    amount: "895 SEK",
+                    dueDate: "Nov 8, 2025",
+                    invoiceNumber: "INV-2025-10-052",
+                    issueDate: "Oct 25, 2025",
+                    status: "Overdue by 1 day",
+                    color: .orange
+                )
+            )
+        ]
+    }
+    
+    static var dueSoonSamples: [InvoiceItem] {
+        [
+            InvoiceItem(
+                merchant: "Netonnet",
+                subtitle: "Nov 12, 2025",
+                amount: "1 568 SEK",
+                icon: nil,
+                color: .yellow,
+                isOverdue: false,
+                statusOverride: "3 days",
+                category: .dueSoon,
+                detail: InvoiceData(
+                    merchant: "Netonnet",
+                    amount: "1 568 SEK",
+                    dueDate: "Nov 12, 2025",
+                    invoiceNumber: "INV-2025-11-001",
+                    issueDate: "Nov 5, 2025",
+                    status: "Due in 3 days",
+                    color: .yellow
+                )
+            ),
+            InvoiceItem(
+                merchant: "Elgiganten",
+                subtitle: "Nov 16, 2025",
+                amount: "900 SEK",
+                icon: nil,
+                color: .yellow,
+                isOverdue: false,
+                statusOverride: "1 week",
+                category: .dueSoon,
+                detail: InvoiceData(
+                    merchant: "Elgiganten",
+                    amount: "900 SEK",
+                    dueDate: "Nov 16, 2025",
+                    invoiceNumber: "INV-2025-11-003",
+                    issueDate: "Nov 2, 2025",
+                    status: "Due in 1 week",
+                    color: .yellow
+                )
+            )
+        ]
+    }
+    
+    static var handledScheduledSamples: [InvoiceItem] {
+        [
+            InvoiceItem(
+                merchant: "Clas Ohlson",
+                subtitle: "Nov 1, 2025",
+                amount: "785 SEK",
+                icon: "checkmark",
+                color: .cyan,
+                isOverdue: false,
+                statusOverride: nil,
+                category: .handledScheduled,
+                detail: InvoiceData(
+                    merchant: "Clas Ohlson",
+                    amount: "785 SEK",
+                    dueDate: "Nov 15, 2025",
+                    invoiceNumber: "INV-2025-11-002",
+                    issueDate: "Nov 1, 2025",
+                    status: "Scheduled for Nov 15",
+                    color: .cyan
+                )
+            )
+        ]
+    }
+    
+    static var handledPaidSamples: [InvoiceItem] {
+        [
+            InvoiceItem(
+                merchant: "Stadium",
+                subtitle: "Oct 25, 2025",
+                amount: "2 340 SEK",
+                icon: "checkmark",
+                color: .green,
+                isOverdue: false,
+                statusOverride: nil,
+                category: .handledPaid,
+                detail: InvoiceData(
+                    merchant: "Stadium",
+                    amount: "2 340 SEK",
+                    dueDate: "Nov 8, 2025",
+                    invoiceNumber: "INV-2025-10-058",
+                    issueDate: "Oct 25, 2025",
+                    status: "Paid on Nov 8",
+                    color: .green
+                )
+            ),
+            InvoiceItem(
+                merchant: "ICA",
+                subtitle: "Oct 20, 2025",
+                amount: "452 SEK",
+                icon: "checkmark",
+                color: .green,
+                isOverdue: false,
+                statusOverride: nil,
+                category: .handledPaid,
+                detail: InvoiceData(
+                    merchant: "ICA",
+                    amount: "452 SEK",
+                    dueDate: "Nov 3, 2025",
+                    invoiceNumber: "INV-2025-10-045",
+                    issueDate: "Oct 20, 2025",
+                    status: "Paid on Nov 3",
+                    color: .green
+                )
+            ),
+            InvoiceItem(
+                merchant: "Åhléns",
+                subtitle: "Oct 14, 2025",
+                amount: "300 SEK",
+                icon: "checkmark",
+                color: .green,
+                isOverdue: false,
+                statusOverride: nil,
+                category: .handledPaid,
+                detail: InvoiceData(
+                    merchant: "Åhléns",
+                    amount: "300 SEK",
+                    dueDate: "Oct 28, 2025",
+                    invoiceNumber: "INV-2025-10-038",
+                    issueDate: "Oct 14, 2025",
+                    status: "Paid on Oct 28",
+                    color: .green
+                )
+            )
+        ]
+    }
 }
 
 struct WalletView: View {
@@ -135,125 +339,158 @@ struct WalletView: View {
     }
 }
 
+struct PurchaseItem: Identifiable {
+    let id = UUID()
+    let title: String
+    let subtitle: String
+    let amount: String
+    let icon: String
+    let color: Color
+    let category: PurchaseCategory
+    let transaction: TransactionData?
+    
+    static let sampleData: [PurchaseItem] = [
+        PurchaseItem(title: "Coffee Shop", subtitle: "Today, 2:30 PM", amount: "45 SEK", icon: "creditcard.fill", color: .brown, category: .recent, transaction: nil),
+        PurchaseItem(title: "IKEA", subtitle: "Yesterday, 5:15 PM", amount: "23 000 SEK", icon: "heart.fill", color: .blue, category: .large, transaction: TransactionData(merchant: "IKEA", amount: "23 000 SEK", date: "Nov 2, 2025", time: "5:15 PM")),
+        PurchaseItem(title: "Gas Station", subtitle: "Yesterday, 8:30 AM", amount: "452 SEK", icon: "creditcard.fill", color: .brown, category: .recent, transaction: nil),
+        PurchaseItem(title: "Online Purchase", subtitle: "2 days ago, 7:45 PM", amount: "900 SEK", icon: "heart.fill", color: .blue, category: .online, transaction: nil),
+        PurchaseItem(title: "Restaurant", subtitle: "3 days ago, 7:00 PM", amount: "322 SEK", icon: "heart.fill", color: .blue, category: .dining, transaction: nil),
+        PurchaseItem(title: "Bauhaus", subtitle: "4 days ago, 11:20 AM", amount: "4 356 kr", icon: "diamond.fill", color: .orange, category: .large, transaction: TransactionData(merchant: "Bauhaus", amount: "4 356 kr", date: "4 days ago", time: "11:20 AM")),
+        PurchaseItem(title: "Bookstore", subtitle: "5 days ago, 3:15 PM", amount: "190 SEK", icon: "creditcard.fill", color: .brown, category: .recent, transaction: nil),
+        PurchaseItem(title: "Movie Theater", subtitle: "6 days ago, 8:45 PM", amount: "245 SEK", icon: "creditcard.fill", color: .brown, category: .entertainment, transaction: nil),
+        PurchaseItem(title: "Clothing Store", subtitle: "1 week ago, 2:30 PM", amount: "1 568 SEK", icon: "creditcard.fill", color: .brown, category: .shopping, transaction: nil)
+    ]
+}
+
+enum PurchaseCategory: String, CaseIterable, Identifiable {
+    case all = "All"
+    case recent = "Recent"
+    case large = "Large"
+    case online = "Online"
+    case dining = "Dining"
+    case entertainment = "Entertainment"
+    case shopping = "Shopping"
+    
+    var id: String { rawValue }
+    
+    var label: String {
+        rawValue
+    }
+}
+
 struct PurchasesList: View {
     @Binding var navigationPath: NavigationPath
     @State private var showCreditDetails = false
+    @State private var selectedFilter: PurchaseCategory = .all
+    @State private var showFilterSheet = false
+    
+    private var filteredPurchases: [PurchaseItem] {
+        switch selectedFilter {
+        case .all:
+            return PurchaseItem.sampleData
+        default:
+            return PurchaseItem.sampleData.filter { $0.category == selectedFilter }
+        }
+    }
     
     var body: some View {
         VStack(spacing: 12) {
             CreditInfoBox(showDetails: $showCreditDetails)
                 .padding(.vertical, 8)
             
-            // Filter Section Header
-            HStack(spacing: 6) {
-                Text("FILTER")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.secondary)
-                    .textCase(.uppercase)
-                    .tracking(0.5)
-                Image(systemName: "chevron.down")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                Spacer()
+            filterControl
+            
+            VStack(spacing: 12) {
+                ForEach(filteredPurchases) { purchase in
+                    if let transaction = purchase.transaction {
+                        Button {
+                            navigationPath.append(transaction)
+                        } label: {
+                            PurchaseRow(
+                                title: purchase.title,
+                                subtitle: purchase.subtitle,
+                                amount: purchase.amount,
+                                icon: purchase.icon,
+                                color: purchase.color
+                            )
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    } else {
+                        PurchaseRow(
+                            title: purchase.title,
+                            subtitle: purchase.subtitle,
+                            amount: purchase.amount,
+                            icon: purchase.icon,
+                            color: purchase.color
+                        )
+                    }
+                }
             }
-            .padding(.horizontal, 4)
-            .padding(.top, 4)
-            .padding(.bottom, 4)
-            
-            PurchaseRow(
-                title: "Coffee Shop",
-                subtitle: "Today, 2:30 PM",
-                amount: "45 SEK",
-                icon: "creditcard.fill",
-                color: .brown
-            )
-            
-            Button {
-                navigationPath.append(TransactionData(
-                    merchant: "IKEA",
-                    amount: "23 000 SEK",
-                    date: "Nov 2, 2025",
-                    time: "5:15 PM"
-                ))
-            } label: {
-                PurchaseRow(
-                    title: "IKEA",
-                    subtitle: "Yesterday, 5:15 PM",
-                    amount: "23 000 SEK",
-                    icon: "heart.fill",
-                    color: .blue
-                )
-            }
-            .buttonStyle(PlainButtonStyle())
-            
-            PurchaseRow(
-                title: "Gas Station",
-                subtitle: "Yesterday, 8:30 AM",
-                amount: "452 SEK",
-                icon: "creditcard.fill",
-                color: .brown
-            )
-            
-            PurchaseRow(
-                title: "Online Purchase",
-                subtitle: "2 days ago, 7:45 PM",
-                amount: "900 SEK",
-                icon: "heart.fill",
-                color: .blue
-            )
-            
-            PurchaseRow(
-                title: "Restaurant",
-                subtitle: "3 days ago, 7:00 PM",
-                amount: "322 SEK",
-                icon: "heart.fill",
-                color: .blue
-            )
-            
-            Button {
-                navigationPath.append(TransactionData(
-                    merchant: "Bauhaus",
-                    amount: "4 356 kr",
-                    date: "4 days ago",
-                    time: "11:20 AM"
-                ))
-            } label: {
-                PurchaseRow(
-                    title: "Bauhaus",
-                    subtitle: "4 days ago, 11:20 AM",
-                    amount: "4 356 kr",
-                    icon: "diamond.fill",
-                    color: .orange
-                )
-            }
-            .buttonStyle(PlainButtonStyle())
-            
-            PurchaseRow(
-                title: "Bookstore",
-                subtitle: "5 days ago, 3:15 PM",
-                amount: "190 SEK",
-                icon: "creditcard.fill",
-                color: .brown
-            )
-            
-            PurchaseRow(
-                title: "Movie Theater",
-                subtitle: "6 days ago, 8:45 PM",
-                amount: "245 SEK",
-                icon: "creditcard.fill",
-                color: .brown
-            )
-            
-            PurchaseRow(
-                title: "Clothing Store",
-                subtitle: "1 week ago, 2:30 PM",
-                amount: "1 568 SEK",
-                icon: "creditcard.fill",
-                color: .brown
-            )
         }
         .padding(.horizontal)
+        .sheet(isPresented: $showFilterSheet) {
+            NavigationStack {
+                List {
+                    Section("Choose filter") {
+                        ForEach(PurchaseCategory.allCases) { category in
+                            Button {
+                                selectedFilter = category
+                                showFilterSheet = false
+                            } label: {
+                                HStack {
+                                    Text(category.label)
+                                    Spacer()
+                                    if selectedFilter == category {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .foregroundColor(.blue)
+                                    }
+                                }
+                            }
+                            .tint(.primary)
+                        }
+                    }
+                }
+                .navigationTitle("Filter Purchases")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Close") {
+                            showFilterSheet = false
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private var filterControl: some View {
+        Button {
+            showFilterSheet = true
+        } label: {
+            HStack(spacing: 10) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Filter")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .textCase(.uppercase)
+                        .tracking(0.5)
+                    Text(selectedFilter.label)
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                }
+                Spacer()
+                Image(systemName: "line.3.horizontal.decrease.circle")
+                    .font(.title3)
+                    .foregroundColor(.blue)
+            }
+            .padding()
+            .background(.ultraThinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(Color.white.opacity(0.08), lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
     }
 }
 
@@ -344,11 +581,26 @@ struct ActionRow: View {
 
 struct InvoicesList: View {
     @Binding var navigationPath: NavigationPath
+    @State private var overdueInvoices = InvoiceItem.overdueSamples
+    @State private var dueSoonInvoices = InvoiceItem.dueSoonSamples
+    @State private var scheduledInvoices = InvoiceItem.handledScheduledSamples
+    @State private var paidInvoices = InvoiceItem.handledPaidSamples
     
+    private var outstandingPool: [InvoiceItem] {
+        overdueInvoices + dueSoonInvoices
+    }
+    
+    private var selectedInvoices: [InvoiceItem] {
+        outstandingPool.filter { $0.isSelected }
+    }
+
     var body: some View {
         VStack(spacing: 12) {
             // Quick Info Box
-            WalletInfoBox()
+            WalletInfoBox(
+                outstandingInvoices: outstandingPool,
+                batchInvoices: selectedInvoices
+            )
                 .padding(.vertical, 8)
             
             // "TO PAY" Section Header
@@ -365,98 +617,13 @@ struct InvoicesList: View {
             .padding(.top, 4)
             .padding(.bottom, 4)
             
-            // Overdue invoices at the top
-            Button {
-                navigationPath.append(InvoiceData(
-                    merchant: "Bauhaus",
-                    amount: "726 kr",
-                    dueDate: "Nov 7, 2025",
-                    invoiceNumber: "INV-2025-11-001",
-                    issueDate: "Nov 7, 2025",
-                    status: "Overdue by 2 days",
-                    color: .orange
-                ))
-            } label: {
-                InvoiceRow(
-                    title: "Bauhaus",
-                    subtitle: "Nov 7, 2025",
-                    amount: "726 kr",
-                    icon: nil,
-                    color: .orange,
-                    isOverdue: true
-                )
+            ForEach(overdueInvoices) { invoice in
+                invoiceButton(for: invoice, allowBatching: true)
             }
-            .buttonStyle(PlainButtonStyle())
             
-            Button {
-                navigationPath.append(InvoiceData(
-                    merchant: "Gekås",
-                    amount: "895 SEK",
-                    dueDate: "Nov 8, 2025",
-                    invoiceNumber: "INV-2025-10-052",
-                    issueDate: "Oct 25, 2025",
-                    status: "Overdue by 1 day",
-                    color: .orange
-                ))
-            } label: {
-                InvoiceRow(
-                    title: "Gekås",
-                    subtitle: "Oct 25, 2025",
-                    amount: "895 SEK",
-                    icon: nil,
-                    color: .orange,
-                    isOverdue: true
-                )
+            ForEach(dueSoonInvoices) { invoice in
+                invoiceButton(for: invoice, allowBatching: true)
             }
-            .buttonStyle(PlainButtonStyle())
-            
-            // Due within 4 days (yellow) - Tappable
-            Button {
-                navigationPath.append(InvoiceData(
-                    merchant: "Netonnet",
-                    amount: "1 568 SEK",
-                    dueDate: "Nov 12, 2025",
-                    invoiceNumber: "INV-2025-11-001",
-                    issueDate: "Nov 5, 2025",
-                    status: "Due in 3 days",
-                    color: .yellow
-                ))
-            } label: {
-                InvoiceRow(
-                    title: "Netonnet",
-                    subtitle: "Nov 12, 2025",
-                    amount: "1 568 SEK",
-                    icon: nil,
-                    color: .yellow,
-                    isOverdue: false,
-                    statusOverride: "3 days"
-                )
-            }
-            .buttonStyle(PlainButtonStyle())
-            
-            // Regular due dates
-            Button {
-                navigationPath.append(InvoiceData(
-                    merchant: "Elgiganten",
-                    amount: "900 SEK",
-                    dueDate: "Nov 16, 2025",
-                    invoiceNumber: "INV-2025-11-003",
-                    issueDate: "Nov 2, 2025",
-                    status: "Due in 1 week",
-                    color: .yellow
-                ))
-            } label: {
-                InvoiceRow(
-                    title: "Elgiganten",
-                    subtitle: "Nov 16, 2025",
-                    amount: "900 SEK",
-                    icon: nil,
-                    color: .yellow,
-                    isOverdue: false,
-                    statusOverride: "1 week"
-                )
-            }
-            .buttonStyle(PlainButtonStyle())
             
             // "Handled" Section Header
             HStack {
@@ -472,97 +639,51 @@ struct InvoicesList: View {
             .padding(.top, 12)
             .padding(.bottom, 4)
             
-            // Scheduled invoices
-            Button {
-                navigationPath.append(InvoiceData(
-                    merchant: "Clas Ohlson",
-                    amount: "785 SEK",
-                    dueDate: "Nov 15, 2025",
-                    invoiceNumber: "INV-2025-11-002",
-                    issueDate: "Nov 1, 2025",
-                    status: "Scheduled for Nov 15",
-                    color: .cyan
-                ))
-            } label: {
-                InvoiceRow(
-                    title: "Clas Ohlson",
-                    subtitle: "Nov 1, 2025",
-                    amount: "785 SEK",
-                    icon: "checkmark",
-                    color: .cyan,
-                    isOverdue: false
-                )
+            ForEach(scheduledInvoices) { invoice in
+                invoiceButton(for: invoice, allowBatching: false)
             }
-            .buttonStyle(PlainButtonStyle())
             
-            // Paid invoices
-            Button {
-                navigationPath.append(InvoiceData(
-                    merchant: "Stadium",
-                    amount: "2 340 SEK",
-                    dueDate: "Nov 8, 2025",
-                    invoiceNumber: "INV-2025-10-058",
-                    issueDate: "Oct 25, 2025",
-                    status: "Paid on Nov 8",
-                    color: .green
-                ))
-            } label: {
-                InvoiceRow(
-                    title: "Stadium",
-                    subtitle: "Oct 25, 2025",
-                    amount: "2 340 SEK",
-                    icon: "checkmark",
-                    color: .green,
-                    isOverdue: false
-                )
+            ForEach(paidInvoices) { invoice in
+                invoiceButton(for: invoice, allowBatching: false)
             }
-            .buttonStyle(PlainButtonStyle())
-            
-            Button {
-                navigationPath.append(InvoiceData(
-                    merchant: "ICA",
-                    amount: "452 SEK",
-                    dueDate: "Nov 3, 2025",
-                    invoiceNumber: "INV-2025-10-045",
-                    issueDate: "Oct 20, 2025",
-                    status: "Paid on Nov 3",
-                    color: .green
-                ))
-            } label: {
-                InvoiceRow(
-                    title: "ICA",
-                    subtitle: "Oct 20, 2025",
-                    amount: "452 SEK",
-                    icon: "checkmark",
-                    color: .green,
-                    isOverdue: false
-                )
-            }
-            .buttonStyle(PlainButtonStyle())
-            
-            Button {
-                navigationPath.append(InvoiceData(
-                    merchant: "Åhléns",
-                    amount: "300 SEK",
-                    dueDate: "Oct 28, 2025",
-                    invoiceNumber: "INV-2025-10-038",
-                    issueDate: "Oct 14, 2025",
-                    status: "Paid on Oct 28",
-                    color: .green
-                ))
-            } label: {
-                InvoiceRow(
-                    title: "Åhléns",
-                    subtitle: "Oct 14, 2025",
-                    amount: "300 SEK",
-                    icon: "checkmark",
-                    color: .green,
-                    isOverdue: false
-                )
-            }
-            .buttonStyle(PlainButtonStyle())
         }
         .padding(.horizontal)
+    }
+    
+    private func invoiceButton(for invoice: InvoiceItem, allowBatching: Bool) -> some View {
+        Button {
+            navigationPath.append(invoice.detail)
+        } label: {
+            InvoiceRow(
+                title: invoice.merchant,
+                subtitle: invoice.subtitle,
+                amount: invoice.amount,
+                icon: invoice.icon,
+                color: invoice.color,
+                isOverdue: invoice.isOverdue,
+                statusOverride: invoice.statusOverride,
+                isSelected: invoice.isSelected,
+                onStatusTap: allowBatching ? {
+                    toggleSelection(for: invoice)
+                } : nil
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+    
+    private func toggleSelection(for invoice: InvoiceItem) {
+        switch invoice.category {
+        case .overdue:
+            if let index = overdueInvoices.firstIndex(where: { $0.id == invoice.id }) {
+                overdueInvoices[index].isSelected.toggle()
+            }
+        case .dueSoon:
+            if let index = dueSoonInvoices.firstIndex(where: { $0.id == invoice.id }) {
+                dueSoonInvoices[index].isSelected.toggle()
+            }
+        default:
+            break
+        }
     }
 }
 
@@ -612,20 +733,12 @@ struct InvoiceRow: View {
     let color: Color
     let isOverdue: Bool
     var statusOverride: String? = nil
+    var isSelected: Bool = false
+    var onStatusTap: (() -> Void)? = nil
     
     var body: some View {
         HStack(spacing: 16) {
-            // Left: Status icon
-            Circle()
-                .fill(color)
-                .frame(width: 44, height: 44)
-                .overlay {
-                    if let icon {
-                        Image(systemName: icon)
-                            .font(.title3)
-                            .foregroundColor(.white)
-                    }
-                }
+            statusIndicator
             
             // Middle: Invoice number and date
             VStack(alignment: .leading, spacing: 4) {
@@ -675,6 +788,34 @@ struct InvoiceRow: View {
     
     private var statusColor: Color {
         return color
+    }
+    
+    @ViewBuilder
+    private var statusIndicator: some View {
+        let circle = Circle()
+            .fill(isSelected ? Color.accentColor : color)
+            .frame(width: 44, height: 44)
+            .overlay {
+                if isSelected {
+                    Image(systemName: "checkmark")
+                        .font(.headline.weight(.bold))
+                        .foregroundColor(.white)
+                } else if let icon {
+                    Image(systemName: icon)
+                        .font(.title3)
+                        .foregroundColor(.white)
+                }
+            }
+        
+        if let onStatusTap {
+            Button(action: onStatusTap) {
+                circle
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Select \(title) for batch payment")
+        } else {
+            circle
+        }
     }
 }
 
@@ -879,50 +1020,29 @@ struct CreditAccountRow: View {
 }
 
 struct WalletInfoBox: View {
-    // Invoices in "TO PAY" section: overdue and due invoices
-    private let invoices: [(amount: String, isOverdue: Bool)] = [
-        ("726 kr", true),      // Bauhaus - overdue
-        ("895 SEK", true),     // Gekås - overdue
-        ("1 568 SEK", false), // Netonnet - due
-        ("900 SEK", false)     // Elgiganten - due
-    ]
+    let outstandingInvoices: [InvoiceItem]
+    let batchInvoices: [InvoiceItem]
     
-    private var totalAmount: String {
-        let total = invoices.reduce(0) { sum, invoice in
-            let amountString = invoice.amount
-            let cleaned = amountString.replacingOccurrences(of: "kr", with: "")
-                .replacingOccurrences(of: "SEK", with: "")
-                .replacingOccurrences(of: " ", with: "")
-                .trimmingCharacters(in: .whitespaces)
-            if let value = Double(cleaned) {
-                return sum + value
-            }
-            return sum
-        }
-        
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.groupingSeparator = " "
-        formatter.maximumFractionDigits = 0
-        if let formatted = formatter.string(from: NSNumber(value: total)) {
-            return "\(formatted) SEK"
-        }
-        return "\(Int(total)) SEK"
+    private var outstandingTotal: String {
+        formattedAmount(for: outstandingInvoices.filter { !$0.isSelected }.reduce(0) { $0 + $1.numericAmount })
+    }
+    
+    private var batchTotal: String {
+        formattedAmount(for: batchInvoices.reduce(0) { $0 + $1.numericAmount })
     }
     
     private var overdueCount: Int {
-        invoices.filter { $0.isOverdue }.count
+        outstandingInvoices.filter { $0.isOverdue && !$0.isSelected }.count
     }
     
     var body: some View {
         VStack(spacing: 16) {
-            // Amount to pay
             VStack(alignment: .leading, spacing: 8) {
                 Text("Amount to Pay")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 
-                Text(totalAmount)
+                Text(outstandingTotal)
                     .font(.system(size: 32, weight: .bold))
                     .foregroundColor(.primary)
                 
@@ -941,7 +1061,6 @@ struct WalletInfoBox: View {
             
             Divider()
             
-            // Payment options
             HStack(spacing: 8) {
                 Image(systemName: "square.grid.2x2.fill")
                     .foregroundColor(.blue)
@@ -950,11 +1069,39 @@ struct WalletInfoBox: View {
                     .foregroundColor(.secondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+            
+            if !batchInvoices.isEmpty {
+                Divider()
+                
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("\(batchInvoices.count) selected")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                        Text("Ready for batch payment")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    Spacer()
+                    Text(batchTotal)
+                        .font(.headline)
+                        .fontWeight(.bold)
+                }
+            }
         }
         .padding(20)
         .background(Color.orange.opacity(0.1))
         .background(.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 16))
+    }
+    
+    private func formattedAmount(for value: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.groupingSeparator = " "
+        formatter.maximumFractionDigits = 0
+        let formatted = formatter.string(from: NSNumber(value: value)) ?? "\(Int(value))"
+        return "\(formatted) SEK"
     }
 }
 

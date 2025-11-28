@@ -12,37 +12,37 @@
 			containerPortal = A4CBA4D42E919FF400840BEC /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = A4CBA4DB2E919FF400840BEC;
-			remoteInfo = NativeResursApp;
+			remoteInfo = ResursYellow;
 		};
 		A4CBA4F42E919FF600840BEC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A4CBA4D42E919FF400840BEC /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = A4CBA4DB2E919FF400840BEC;
-			remoteInfo = NativeResursApp;
+			remoteInfo = ResursYellow;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		A4CBA4DC2E919FF400840BEC /* NativeResursApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NativeResursApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A4CBA4E92E919FF600840BEC /* NativeResursAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NativeResursAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A4CBA4F32E919FF600840BEC /* NativeResursAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NativeResursAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4CBA4DC2E919FF400840BEC /* ResursYellow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ResursYellow.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4CBA4E92E919FF600840BEC /* ResursYellowTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ResursYellowTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4CBA4F32E919FF600840BEC /* ResursYellowUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ResursYellowUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		A4CBA4DE2E919FF400840BEC /* NativeResursApp */ = {
+		A4CBA4DE2E919FF400840BEC /* ResursYellow */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = NativeResursApp;
+			path = ResursYellow;
 			sourceTree = "<group>";
 		};
-		A4CBA4EC2E919FF600840BEC /* NativeResursAppTests */ = {
+		A4CBA4EC2E919FF600840BEC /* ResursYellowTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = NativeResursAppTests;
+			path = ResursYellowTests;
 			sourceTree = "<group>";
 		};
-		A4CBA4F62E919FF600840BEC /* NativeResursAppUITests */ = {
+		A4CBA4F62E919FF600840BEC /* ResursYellowUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = NativeResursAppUITests;
+			path = ResursYellowUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,9 +75,9 @@
 		A4CBA4D32E919FF400840BEC = {
 			isa = PBXGroup;
 			children = (
-				A4CBA4DE2E919FF400840BEC /* NativeResursApp */,
-				A4CBA4EC2E919FF600840BEC /* NativeResursAppTests */,
-				A4CBA4F62E919FF600840BEC /* NativeResursAppUITests */,
+				A4CBA4DE2E919FF400840BEC /* ResursYellow */,
+				A4CBA4EC2E919FF600840BEC /* ResursYellowTests */,
+				A4CBA4F62E919FF600840BEC /* ResursYellowUITests */,
 				A4CBA4DD2E919FF400840BEC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -85,9 +85,9 @@
 		A4CBA4DD2E919FF400840BEC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A4CBA4DC2E919FF400840BEC /* NativeResursApp.app */,
-				A4CBA4E92E919FF600840BEC /* NativeResursAppTests.xctest */,
-				A4CBA4F32E919FF600840BEC /* NativeResursAppUITests.xctest */,
+				A4CBA4DC2E919FF400840BEC /* ResursYellow.app */,
+				A4CBA4E92E919FF600840BEC /* ResursYellowTests.xctest */,
+				A4CBA4F32E919FF600840BEC /* ResursYellowUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,9 +95,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A4CBA4DB2E919FF400840BEC /* NativeResursApp */ = {
+		A4CBA4DB2E919FF400840BEC /* ResursYellow */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A4CBA4FD2E919FF600840BEC /* Build configuration list for PBXNativeTarget "NativeResursApp" */;
+			buildConfigurationList = A4CBA4FD2E919FF600840BEC /* Build configuration list for PBXNativeTarget "ResursYellow" */;
 			buildPhases = (
 				A4CBA4D82E919FF400840BEC /* Sources */,
 				A4CBA4D92E919FF400840BEC /* Frameworks */,
@@ -108,18 +108,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				A4CBA4DE2E919FF400840BEC /* NativeResursApp */,
+				A4CBA4DE2E919FF400840BEC /* ResursYellow */,
 			);
-			name = NativeResursApp;
+			name = ResursYellow;
 			packageProductDependencies = (
 			);
-			productName = NativeResursApp;
-			productReference = A4CBA4DC2E919FF400840BEC /* NativeResursApp.app */;
+			productName = ResursYellow;
+			productReference = A4CBA4DC2E919FF400840BEC /* ResursYellow.app */;
 			productType = "com.apple.product-type.application";
 		};
-		A4CBA4E82E919FF600840BEC /* NativeResursAppTests */ = {
+		A4CBA4E82E919FF600840BEC /* ResursYellowTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A4CBA5002E919FF600840BEC /* Build configuration list for PBXNativeTarget "NativeResursAppTests" */;
+			buildConfigurationList = A4CBA5002E919FF600840BEC /* Build configuration list for PBXNativeTarget "ResursYellowTests" */;
 			buildPhases = (
 				A4CBA4E52E919FF600840BEC /* Sources */,
 				A4CBA4E62E919FF600840BEC /* Frameworks */,
@@ -131,18 +131,18 @@
 				A4CBA4EB2E919FF600840BEC /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				A4CBA4EC2E919FF600840BEC /* NativeResursAppTests */,
+				A4CBA4EC2E919FF600840BEC /* ResursYellowTests */,
 			);
-			name = NativeResursAppTests;
+			name = ResursYellowTests;
 			packageProductDependencies = (
 			);
-			productName = NativeResursAppTests;
-			productReference = A4CBA4E92E919FF600840BEC /* NativeResursAppTests.xctest */;
+			productName = ResursYellowTests;
+			productReference = A4CBA4E92E919FF600840BEC /* ResursYellowTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		A4CBA4F22E919FF600840BEC /* NativeResursAppUITests */ = {
+		A4CBA4F22E919FF600840BEC /* ResursYellowUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A4CBA5032E919FF600840BEC /* Build configuration list for PBXNativeTarget "NativeResursAppUITests" */;
+			buildConfigurationList = A4CBA5032E919FF600840BEC /* Build configuration list for PBXNativeTarget "ResursYellowUITests" */;
 			buildPhases = (
 				A4CBA4EF2E919FF600840BEC /* Sources */,
 				A4CBA4F02E919FF600840BEC /* Frameworks */,
@@ -154,13 +154,13 @@
 				A4CBA4F52E919FF600840BEC /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				A4CBA4F62E919FF600840BEC /* NativeResursAppUITests */,
+				A4CBA4F62E919FF600840BEC /* ResursYellowUITests */,
 			);
-			name = NativeResursAppUITests;
+			name = ResursYellowUITests;
 			packageProductDependencies = (
 			);
-			productName = NativeResursAppUITests;
-			productReference = A4CBA4F32E919FF600840BEC /* NativeResursAppUITests.xctest */;
+			productName = ResursYellowUITests;
+			productReference = A4CBA4F32E919FF600840BEC /* ResursYellowUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -186,7 +186,7 @@
 					};
 				};
 			};
-			buildConfigurationList = A4CBA4D72E919FF400840BEC /* Build configuration list for PBXProject "NativeResursApp" */;
+			buildConfigurationList = A4CBA4D72E919FF400840BEC /* Build configuration list for PBXProject "ResursYellow" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -200,9 +200,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A4CBA4DB2E919FF400840BEC /* NativeResursApp */,
-				A4CBA4E82E919FF600840BEC /* NativeResursAppTests */,
-				A4CBA4F22E919FF600840BEC /* NativeResursAppUITests */,
+				A4CBA4DB2E919FF400840BEC /* ResursYellow */,
+				A4CBA4E82E919FF600840BEC /* ResursYellowTests */,
+				A4CBA4F22E919FF600840BEC /* ResursYellowUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -258,12 +258,12 @@
 /* Begin PBXTargetDependency section */
 		A4CBA4EB2E919FF600840BEC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = A4CBA4DB2E919FF400840BEC /* NativeResursApp */;
+			target = A4CBA4DB2E919FF400840BEC /* ResursYellow */;
 			targetProxy = A4CBA4EA2E919FF600840BEC /* PBXContainerItemProxy */;
 		};
 		A4CBA4F52E919FF600840BEC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = A4CBA4DB2E919FF400840BEC /* NativeResursApp */;
+			target = A4CBA4DB2E919FF400840BEC /* ResursYellow */;
 			targetProxy = A4CBA4F42E919FF600840BEC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -402,7 +402,7 @@
 				DEVELOPMENT_TEAM = 6V92CPTJW8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Resurs Canary";
+				INFOPLIST_KEY_CFBundleDisplayName = "ResursYellow";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = NO;
@@ -414,7 +414,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.6;
-				PRODUCT_BUNDLE_IDENTIFIER = se.likabra.NativeResursApp;
+				PRODUCT_BUNDLE_IDENTIFIER = se.likabra.ResursYellow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -436,7 +436,7 @@
 				DEVELOPMENT_TEAM = 6V92CPTJW8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Resurs Canary";
+				INFOPLIST_KEY_CFBundleDisplayName = "ResursYellow";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = NO;
@@ -448,7 +448,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.6;
-				PRODUCT_BUNDLE_IDENTIFIER = se.likabra.NativeResursApp;
+				PRODUCT_BUNDLE_IDENTIFIER = se.likabra.ResursYellow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -470,7 +470,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = se.likabra.NativeResursAppTests;
+				PRODUCT_BUNDLE_IDENTIFIER = se.likabra.ResursYellowTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -478,7 +478,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NativeResursApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NativeResursApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ResursYellow.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ResursYellow";
 			};
 			name = Debug;
 		};
@@ -492,7 +492,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = se.likabra.NativeResursAppTests;
+				PRODUCT_BUNDLE_IDENTIFIER = se.likabra.ResursYellowTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -500,7 +500,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NativeResursApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NativeResursApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ResursYellow.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ResursYellow";
 			};
 			name = Release;
 		};
@@ -512,7 +512,7 @@
 				DEVELOPMENT_TEAM = 6V92CPTJW8;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = se.likabra.NativeResursAppUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = se.likabra.ResursYellowUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -520,7 +520,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = NativeResursApp;
+				TEST_TARGET_NAME = ResursYellow;
 			};
 			name = Debug;
 		};
@@ -532,7 +532,7 @@
 				DEVELOPMENT_TEAM = 6V92CPTJW8;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = se.likabra.NativeResursAppUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = se.likabra.ResursYellowUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -540,14 +540,14 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = NativeResursApp;
+				TEST_TARGET_NAME = ResursYellow;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A4CBA4D72E919FF400840BEC /* Build configuration list for PBXProject "NativeResursApp" */ = {
+		A4CBA4D72E919FF400840BEC /* Build configuration list for PBXProject "ResursYellow" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A4CBA4FB2E919FF600840BEC /* Debug */,
@@ -556,7 +556,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A4CBA4FD2E919FF600840BEC /* Build configuration list for PBXNativeTarget "NativeResursApp" */ = {
+		A4CBA4FD2E919FF600840BEC /* Build configuration list for PBXNativeTarget "ResursYellow" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A4CBA4FE2E919FF600840BEC /* Debug */,
@@ -565,7 +565,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A4CBA5002E919FF600840BEC /* Build configuration list for PBXNativeTarget "NativeResursAppTests" */ = {
+		A4CBA5002E919FF600840BEC /* Build configuration list for PBXNativeTarget "ResursYellowTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A4CBA5012E919FF600840BEC /* Debug */,
@@ -574,7 +574,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A4CBA5032E919FF600840BEC /* Build configuration list for PBXNativeTarget "NativeResursAppUITests" */ = {
+		A4CBA5032E919FF600840BEC /* Build configuration list for PBXNativeTarget "ResursYellowUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A4CBA5042E919FF600840BEC /* Debug */,

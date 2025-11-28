@@ -1,13 +1,13 @@
 //
-//  NativeResursAppUITestsLaunchTests.swift
-//  NativeResursAppUITests
+//  ResursYellowUITestsLaunchTests.swift
+//  ResursYellowUITests
 //
 //  Created by Bjarne Werner on 2025-10-04.
 //
 
 import XCTest
 
-final class NativeResursAppUITestsLaunchTests: XCTestCase {
+final class ResursYellowUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

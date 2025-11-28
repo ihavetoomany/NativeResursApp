@@ -1,6 +1,6 @@
 //
 //  PaymentPlansManager.swift
-//  NativeResursApp
+//  ResursYellow
 //
 //  Created by Bjarne Werner on 2025-11-03.
 //

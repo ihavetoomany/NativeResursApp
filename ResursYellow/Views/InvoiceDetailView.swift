@@ -1,6 +1,6 @@
 //
 //  InvoiceDetailView.swift
-//  NativeResursApp
+//  ResursYellow
 //
 //  Created by Bjarne Werner on 2025-11-09.
 //
@@ -80,6 +80,8 @@ struct InvoiceDetailView: View {
                                     showPaymentSheet = true
                                 }, onPartPayment: {
                                     showPaymentSheet = true
+                                }, onEndPayment: {
+                                    showPaymentSheet = true
                                 }, onSnooze: {
                                     // Handle snooze action
                                     // Could show a date picker sheet or similar
@@ -155,7 +157,6 @@ struct InvoiceDetailView: View {
             }
         }
         .navigationBarHidden(true)
-        .toolbar(.hidden, for: .tabBar)
         .sheet(isPresented: $showPaymentSheet) {
             PaymentSheet(
                 invoice: invoice,
@@ -254,7 +255,7 @@ struct PaymentInformationCard: View {
             
             if isScheduled {
                 VStack(spacing: 8) {
-                    HStack {
+                    HStack(alignment: .top) {
                         Text("Status")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
@@ -502,6 +503,7 @@ struct InvoiceItemRow: View {
 struct PaymentOptionsCard: View {
     let onPayInFull: () -> Void
     let onPartPayment: () -> Void
+    let onEndPayment: () -> Void
     let onSnooze: () -> Void
     
     var body: some View {
@@ -516,15 +518,24 @@ struct PaymentOptionsCard: View {
                     title: "Pay Invoice",
                     description: "Pay this month's balance",
                     color: .blue,
+                    isDefaultOption: true,
                     action: onPayInFull
                 )
                 
                 PaymentOptionRow(
                     icon: "calendar.circle.fill",
-                    title: "Make End Payment",
-                    description: "Pay back the full debt",
+                    title: "Change Payment Plan",
+                    description: "Change plan, or pay custom amount",
                     color: .purple,
                     action: onPartPayment
+                )
+                
+                PaymentOptionRow(
+                    icon: "creditcard.circle.fill",
+                    title: "Make End Payment",
+                    description: "Pay the full, remaining debt",
+                    color: .orange,
+                    action: onEndPayment
                 )
                 
                 PaymentOptionRow(
@@ -547,6 +558,7 @@ struct PaymentOptionRow: View {
     let title: String
     let description: String
     let color: Color
+    var isDefaultOption: Bool = false
     let action: () -> Void
     
     @State private var isPressed = false
@@ -585,6 +597,10 @@ struct PaymentOptionRow: View {
             .background(isPressed ? color.opacity(0.15) : color.opacity(0.08))
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .scaleEffect(isPressed ? 0.97 : 1.0)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color.blue.opacity(isDefaultOption ? 0.8 : 0), lineWidth: isDefaultOption ? 1.5 : 0)
+            )
         }
         .buttonStyle(PlainButtonStyle())
         .simultaneousGesture(
@@ -605,8 +621,7 @@ struct PaymentOptionRow: View {
 
 struct PaymentSheet: View {
     @Environment(\.dismiss) var dismiss
-    @State private var selectedPaymentOption = 0
-    @State private var partPaymentAmount = ""
+    @State private var paymentDate = Date()
     @State private var isProcessing = false
     
     let invoice: InvoiceData
@@ -614,7 +629,22 @@ struct PaymentSheet: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 24) {
+            VStack(spacing: 20) {
+                HStack {
+                    Spacer()
+                    GlassIconButton(size: 40, action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.primary)
+                    }
+                    .disabled(isProcessing)
+                    .opacity(isProcessing ? 0.4 : 1)
+                }
+                .padding(.top, 8)
+                .padding(.horizontal)
+                
                 // Payment Amount
                 VStack(spacing: 12) {
                     Text("Payment Amount")
@@ -629,15 +659,14 @@ struct PaymentSheet: View {
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
-                .padding(.top, 20)
                 
-                // Payment Method
+                // Payment Details
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Payment Method")
+                    Text("Payment Details")
                         .font(.headline)
                         .fontWeight(.semibold)
                     
-                    HStack {
+                    HStack(alignment: .top) {
                         Image(systemName: "creditcard.fill")
                             .font(.title3)
                             .foregroundColor(.blue)
@@ -665,26 +694,37 @@ struct PaymentSheet: View {
                 }
                 .padding(.horizontal)
                 
-                // Payment Type Selection
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Payment Type")
-                        .font(.headline)
-                        .fontWeight(.semibold)
+                // Payment Date
+                HStack(spacing: 12) {
+                    Image(systemName: "calendar.badge.clock")
+                        .font(.title3)
+                        .foregroundColor(.blue)
+                        .frame(width: 36, height: 36)
+                        .background(Color.blue.opacity(0.15))
+                        .clipShape(Circle())
                     
-                    Picker("Payment Type", selection: $selectedPaymentOption) {
-                        Text("Pay in Full").tag(0)
-                        Text("Part Payment").tag(1)
-                    }
-                    .pickerStyle(.segmented)
+                    Spacer()
+                    
+                    DatePicker(
+                        "Payment Date",
+                        selection: $paymentDate,
+                        in: Date()...,
+                        displayedComponents: [.date]
+                    )
+                    .datePickerStyle(.compact)
+                    .labelsHidden()
+                    .accessibilityLabel("Payment date")
                 }
+                .padding(16)
+                .background(.ultraThinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
                 .padding(.horizontal)
                 
-                Spacer()
+                Spacer(minLength: 0)
                 
                 // Confirm Button
                 Button(action: {
                     isProcessing = true
-                    // Simulate payment processing
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                         onPaymentCompleted()
                         dismiss()
@@ -706,23 +746,16 @@ struct PaymentSheet: View {
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
                     .background(isProcessing ? Color.gray : Color.blue)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Capsule())
+                    .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 6)
                 }
                 .disabled(isProcessing)
                 .padding(.horizontal)
                 .padding(.bottom, 32)
             }
             .background(Color(UIColor.systemBackground))
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                    .foregroundColor(.blue)
-                    .disabled(isProcessing)
-                }
-            }
         }
+        .toolbar(.hidden, for: .navigationBar)
     }
 }
 

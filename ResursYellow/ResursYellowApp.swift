@@ -1,6 +1,6 @@
 //
-//  NativeResursAppApp.swift
-//  NativeResursApp
+//  ResursYellowApp.swift
+//  ResursYellow
 //
 //  Created by Bjarne Werner on 2025-10-04.
 //
@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct NativeResursAppApp: App {
+struct ResursYellowApp: App {
     @AppStorage("hasSeenAboutDialog") private var hasSeenAboutDialog = false
     @State private var showAbout = false
     

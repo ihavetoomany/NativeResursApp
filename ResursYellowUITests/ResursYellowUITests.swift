@@ -1,13 +1,13 @@
 //
-//  NativeResursAppUITests.swift
-//  NativeResursAppUITests
+//  ResursYellowUITests.swift
+//  ResursYellowUITests
 //
 //  Created by Bjarne Werner on 2025-10-04.
 //
 
 import XCTest
 
-final class NativeResursAppUITests: XCTestCase {
+final class ResursYellowUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
