@@ -62,7 +62,7 @@ struct BauhausDetailView: View {
                         )
                 }
                 .frame(maxWidth: .infinity)
-                .padding(.bottom, -24)
+                .padding(.bottom, 12)
                 
                 // Top info box
                 VStack(alignment: .leading, spacing: 12) {
