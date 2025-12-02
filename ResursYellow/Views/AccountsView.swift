@@ -27,6 +27,19 @@ struct AccountsView: View {
                 VStack(spacing: 16) {
                     // Account Cards
                     VStack(spacing: 16) {
+                        // My Accounts Section Header
+                        HStack {
+                            Text("My Accounts")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.secondary)
+                                .textCase(.uppercase)
+                                .tracking(0.5)
+                            Spacer()
+                        }
+                        .padding(.horizontal, 4)
+
+                        // My Accounts Items
                         Button {
                             navigationPath.append("ResursFamily")
                         } label: {
@@ -41,48 +54,47 @@ struct AccountsView: View {
                             )
                         }
                         .buttonStyle(PlainButtonStyle())
-                        
-                        AccountCard(
-                            title: "Dirt Bike Savings",
-                            accountType: "Savings Account",
-                            accountNumber: "**** 5678",
-                            balance: "39 136 SEK",
-                            icon: "chart.line.uptrend.xyaxis",
-                            color: .green,
-                            balanceLabel: "Available Balance"
-                        )
-                        
-                        AccountCard(
-                            title: "Jula Credit Account",
-                            accountType: "Jula",
-                            accountNumber: "**** 9012",
-                            balance: "20 000 SEK",
-                            icon: "link.circle.fill",
-                            color: .purple,
-                            balanceLabel: "Available Balance"
-                        )
-                        
-                        AccountCard(
-                            title: "Toyota Billån",
-                            accountType: "Consumer Loan",
-                            accountNumber: "**** 4567",
-                            balance: "114 300 SEK",
-                            icon: "dollarsign.circle.fill",
-                            color: .orange,
-                            balanceLabel: "Current Debt"
-                        )
-                        
-                        AccountCard(
-                            title: "Komplett Phone Trade In",
-                            accountType: "Komplett",
-                            accountNumber: "**** 7890",
-                            balance: "8 200 SEK",
-                            icon: "link.circle.fill",
-                            color: .blue,
-                            balanceLabel: "Balance"
+
+                        // Discover Section Header
+                        HStack {
+                            Text("Discover")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.secondary)
+                                .textCase(.uppercase)
+                                .tracking(0.5)
+                            Spacer()
+                        }
+                        .padding(.horizontal, 4)
+
+                        // Discover Items
+                        Button(action: {
+                            // TODO: Navigate to loan info/calculator/apply flow
+                        }) {
+                            CompactDiscoverRow(
+                                title: "Apply for a Loan",
+                                subtitle: "Read more, calculate and apply",
+                                icon: "car.fill",
+                                color: .blue,
+                                trailingIcon: "plus"
                             )
                         }
-                        .padding(.horizontal)
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        Button(action: {
+                            // TODO: Navigate to savings goal creation flow
+                        }) {
+                            CompactDiscoverRow(
+                                title: "Start Saving for a Goal",
+                                subtitle: "Open an account in 2 min",
+                                icon: "piggy.bank.fill",
+                                color: .green,
+                                trailingIcon: "plus"
+                            )
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                    .padding(.horizontal)
                     .padding(.top, 24)
                     .padding(.bottom, 16)
                 }
@@ -160,7 +172,46 @@ struct AccountCard: View {
     }
 }
 
+struct CompactDiscoverRow: View {
+    let title: String
+    let subtitle: String
+    let icon: String
+    let color: Color
+    var trailingIcon: String? = nil
+
+    var body: some View {
+        HStack(spacing: 16) {
+            Image(systemName: icon)
+                .font(.title3)
+                .foregroundColor(color)
+                .frame(width: 36, height: 36)
+                .background(color.opacity(0.2))
+                .clipShape(Circle())
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+
+            Spacer()
+
+            if let trailingIcon {
+                Image(systemName: trailingIcon)
+                    .foregroundColor(.blue)
+            }
+        }
+        .padding(16)
+        .background(.ultraThinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+}
+
 #Preview {
     AccountsView()
         .preferredColorScheme(.dark)
 }
+

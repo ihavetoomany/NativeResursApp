@@ -219,7 +219,7 @@ extension InvoiceItem {
 }
 
 struct WalletView: View {
-    @State private var selectedTab = 0
+    @State private var selectedTab = 1
     @State private var navigationPath = NavigationPath()
     @State private var showProfile = false
     
@@ -235,6 +235,10 @@ struct WalletView: View {
         default:
             return "Good night"
         }
+    }
+    
+    private var unpaidInvoicesCount: Int {
+        InvoiceItem.overdueSamples.count + InvoiceItem.dueSoonSamples.count
     }
     
     var body: some View {
@@ -253,25 +257,10 @@ struct WalletView: View {
                 // Sticky Pills Section
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {
-                        Button(action: { selectedTab = 0 }) {
-                                Text("Invoices")
-                                    .font(.headline)
-                                    .fontWeight(.semibold)
-                                .foregroundColor(selectedTab == 0 ? .primary : .secondary)
-                                .padding(.horizontal, 24)
-                                .padding(.vertical, 12)
-                                .background(selectedTab == 0 ? Color.blue.opacity(0.2) : Color.clear)
-                                .clipShape(Capsule())
-                                .overlay(
-                                    Capsule()
-                                        .stroke(selectedTab == 0 ? Color.blue : Color.secondary.opacity(0.3), lineWidth: 1)
-                                )
-                        }
-                        
                         Button(action: { selectedTab = 1 }) {
-                                Text("Purchases")
-                                    .font(.headline)
-                                    .fontWeight(.semibold)
+                            Text("Purchases")
+                                .font(.headline)
+                                .fontWeight(.semibold)
                                 .foregroundColor(selectedTab == 1 ? .primary : .secondary)
                                 .padding(.horizontal, 24)
                                 .padding(.vertical, 12)
@@ -280,6 +269,21 @@ struct WalletView: View {
                                 .overlay(
                                     Capsule()
                                         .stroke(selectedTab == 1 ? Color.blue : Color.secondary.opacity(0.3), lineWidth: 1)
+                                )
+                        }
+                        
+                        Button(action: { selectedTab = 0 }) {
+                            Text(unpaidInvoicesCount > 0 ? "Invoices (\(unpaidInvoicesCount))" : "Invoices")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(selectedTab == 0 ? .primary : .secondary)
+                                .padding(.horizontal, 24)
+                                .padding(.vertical, 12)
+                                .background(selectedTab == 0 ? Color.blue.opacity(0.2) : Color.clear)
+                                .clipShape(Capsule())
+                                .overlay(
+                                    Capsule()
+                                        .stroke(selectedTab == 0 ? Color.blue : Color.secondary.opacity(0.3), lineWidth: 1)
                                 )
                         }
                         
@@ -295,24 +299,24 @@ struct WalletView: View {
                                 .overlay(
                                     Capsule()
                                         .stroke(selectedTab == 2 ? Color.blue : Color.secondary.opacity(0.3), lineWidth: 1)
-                                    )
-                            }
+                                )
                         }
-                        .padding(.horizontal)
                     }
-                    .padding(.bottom, 12)
-                } content: {
-                    VStack(spacing: 16) {
+                    .padding(.horizontal)
+                }
+                .padding(.bottom, 12)
+            } content: {
+                VStack(spacing: 16) {
                     // Content based on selected tab
-                        if selectedTab == 0 {
-                            InvoicesList(navigationPath: $navigationPath)
-                        } else if selectedTab == 1 {
-                            PurchasesList(navigationPath: $navigationPath)
-                        } else {
-                            ActionsList()
-                        }
+                    if selectedTab == 1 {
+                        PurchasesList(navigationPath: $navigationPath)
+                    } else if selectedTab == 0 {
+                        InvoicesList(navigationPath: $navigationPath)
+                    } else {
+                        ActionsList()
                     }
                 }
+            }
             .navigationBarHidden(true)
             .navigationDestination(for: TransactionData.self) { transaction in
                 TransactionDetailView(
@@ -398,7 +402,10 @@ struct PurchasesList: View {
             CreditInfoBox(showDetails: $showCreditDetails)
                 .padding(.vertical, 8)
             
-            filterControl
+            HStack {
+                filterControl
+                Spacer()
+            }
             
             VStack(spacing: 12) {
                 ForEach(filteredPurchases) { purchase in
@@ -466,29 +473,17 @@ struct PurchasesList: View {
         Button {
             showFilterSheet = true
         } label: {
-            HStack(spacing: 10) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Filter")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .textCase(.uppercase)
-                        .tracking(0.5)
-                    Text(selectedFilter.label)
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                }
-                Spacer()
-                Image(systemName: "line.3.horizontal.decrease.circle")
-                    .font(.title3)
-                    .foregroundColor(.blue)
+            HStack(spacing: 6) {
+                Text(selectedFilter.label.uppercased())
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.secondary)
+                Image(systemName: "chevron.down")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
             }
-            .padding()
-            .background(.ultraThinMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(Color.white.opacity(0.08), lineWidth: 1)
-            )
+            .padding(.horizontal, 4)
+            .padding(.vertical, 2)
         }
         .buttonStyle(.plain)
     }

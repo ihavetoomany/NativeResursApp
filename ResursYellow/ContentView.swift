@@ -57,18 +57,22 @@ struct ContentView: View {
             } else {
                 TabView(selection: $selectedTab) {
                     // Wallet Tab
-                    WalletView()
-                        .tabItem {
-                            Label("Wallet", systemImage: selectedTab == 0 ? "creditcard.fill" : "creditcard")
-                        }
-                        .tag(0)
+                    NavigationStack {
+                        WalletView()
+                    }
+                    .tabItem {
+                        Label("Wallet", systemImage: selectedTab == 0 ? "creditcard.fill" : "creditcard")
+                    }
+                    .tag(0)
                     
                     // Accounts Tab (lazy loaded)
-                    Group {
-                        if hasAppeared || selectedTab == 1 {
-                            AccountsView()
-                        } else {
-                            Color.clear
+                    NavigationStack {
+                        Group {
+                            if hasAppeared || selectedTab == 1 {
+                                AccountsView()
+                            } else {
+                                Color.clear
+                            }
                         }
                     }
                     .tabItem {
@@ -76,25 +80,29 @@ struct ContentView: View {
                     }
                     .tag(1)
                     
-                    // Explore Tab (lazy loaded)
-                    Group {
-                        if hasAppeared || selectedTab == 2 {
-                            ExploreView()
-                        } else {
-                            Color.clear
+                    // Merchants Tab (lazy loaded)
+                    NavigationStack {
+                        Group {
+                            if hasAppeared || selectedTab == 2 {
+                                MerchantsView()
+                            } else {
+                                Color.clear
+                            }
                         }
                     }
                     .tabItem {
-                        Label("Explore", systemImage: selectedTab == 2 ? "safari.fill" : "safari")
+                        Label("Merchants", systemImage: selectedTab == 2 ? "bag.fill" : "bag")
                     }
                     .tag(2)
                     
                     // Support Tab (lazy loaded)
-                    Group {
-                        if hasAppeared || selectedTab == 3 {
-                            ChatView()
-                        } else {
-                            Color.clear
+                    NavigationStack {
+                        Group {
+                            if hasAppeared || selectedTab == 3 {
+                                ChatView()
+                            } else {
+                                Color.clear
+                            }
                         }
                     }
                     .tabItem {

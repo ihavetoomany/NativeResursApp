@@ -248,7 +248,6 @@ struct TransactionDetailView: View {
             }
         }
         .navigationBarHidden(true)
-        .toolbar(.hidden, for: .tabBar)
         .sheet(isPresented: $showNewPlanSheet) {
             NewPaymentPlanSheet(
                 transactionAmount: amount,

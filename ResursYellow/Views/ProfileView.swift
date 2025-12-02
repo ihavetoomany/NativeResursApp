@@ -694,7 +694,7 @@ struct ChangeShortcutsView: View {
                 
                 // Placeholder for shortcut customization
                 VStack(spacing: 12) {
-                    ForEach(["Wallet", "Accounts", "Explore", "Support"], id: \.self) { shortcut in
+                    ForEach(["Wallet", "Accounts", "Merchants", "Support"], id: \.self) { shortcut in
                         HStack {
                             Text(shortcut)
                                 .font(.subheadline)
@@ -719,5 +719,4 @@ struct ChangeShortcutsView: View {
     ProfileView()
         .preferredColorScheme(.dark)
 }
-
 
